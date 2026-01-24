@@ -1,0 +1,21 @@
+
+.containerHome {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #0f0f10;
+  color: #eaeaea;
+}
+
+.buttonChat {
+  margin-top: 20px;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #1b1b1e;
+  color: #fff;
+}
