@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from groq.types.chat import ChatCompletionMessageParam
 
 load_dotenv()
 

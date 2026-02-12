@@ -89,3 +89,38 @@ export async function getQuiz(quizId) {
   return await res.json();
 }
 
+
+
+
+// Behavior Prediction API
+// Behavior (KMeans) API
+export async function predictBehaviorCluster(payload) {
+  const res = await fetch("http://localhost:8000/api/behavior/predict", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json(); // { cluster, label }
+}
+
+
+// ===============================
+// .NET API (Teacher Dashboard)
+// ===============================
+const DOTNET_BASE = "https://localhost:7265"; // .NET Swagger
+
+// Teacher Dashboard API
+export async function getTeacherDashboard(teacherId) {
+  const res = await fetch(`${DOTNET_BASE}/api/teacher/dashboard?teacherId=${teacherId}`);
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json();
+}
+
+// Student Dashboard API
+export async function getStudentDashboard(studentId) {
+  const res = await fetch(`${DOTNET_BASE}/api/student/dashboard?studentId=${studentId}`);
+  if (!res.ok) throw new Error(await res.text());
+  return await res.json();
+}

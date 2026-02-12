@@ -14,3 +14,11 @@ from their official school textbooks using Retrieval-Augmented Generation (RAG).
 - Grade & subject aware question answering
 - Context-only answers (no hallucination)
 - Quiz generation from study material
+
+
+Place trained models inside:
+app/behavior/models/
+
+Expected files:
+- student_cluster_model.pkl
+- student_scaler.pkl

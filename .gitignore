@@ -17,3 +17,11 @@ venv/
 # Node (UI)
 node_modules/
 dist/
+
+# AI Models
+*.pkl
+models/
+data/outputs/
+
+# OS
+.DS_Store

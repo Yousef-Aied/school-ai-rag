@@ -6,6 +6,7 @@ from app.rag.indexer import build_or_load_vectorstore
 from app.rag.retriever import retrieve_context
 from app.llm.groq_client import ask_groq
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent  # project root
 PDF_DIR = BASE_DIR / "data" / "pdfs"
 VECTORSTORE_DIR = BASE_DIR / "vectorstore"

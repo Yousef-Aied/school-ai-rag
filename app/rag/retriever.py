@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 
 # retriever.py: Searches accurately using filters (Grade and Subject)
 

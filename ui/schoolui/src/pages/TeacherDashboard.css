@@ -1,0 +1,170 @@
+/* TeacherDashboard.css */
+:root{
+  --bg:#f4f6ff;
+  --card:#ffffff;
+  --stroke:#e6e9f5;
+  --text:#1b1f2a;
+  --muted:#6b7280;
+  --primary:#6d28d9; /* purple */
+  --primary2:#4f46e5;
+  --shadow: 0 14px 40px rgba(16,24,40,0.08);
+  --radius:16px;
+}
+
+.td-page{
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.td-topbar{
+  height: 74px;
+  background: linear-gradient(90deg, #4c1d95, #5b21b6, #4f46e5);
+  color: #fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 22px;
+}
+
+.td-brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.td-logo{
+  width:38px;height:38px;border-radius:12px;
+  background: rgba(255,255,255,0.16);
+  display:grid;place-items:center;
+  font-weight:900;
+}
+.td-brand h1{
+  font-size:16px;margin:0;line-height:1.1;
+}
+.td-brand p{
+  margin:0;font-size:12px;opacity:.85;
+}
+
+.td-actions{
+  display:flex; gap:10px; align-items:center;
+}
+.td-pill{
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size:12px;
+}
+
+.td-wrap{
+  max-width: 1200px;
+  margin: 18px auto;
+  padding: 0 18px 28px;
+}
+
+.td-grid{
+  display:grid;
+  grid-template-columns: 280px 1fr 360px;
+  gap: 16px;
+}
+
+.td-card{
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.td-card-h{
+  padding: 14px 16px 0;
+  font-weight:800;
+}
+.td-card-b{
+  padding: 14px 16px 16px;
+}
+
+.td-filter{
+  padding: 16px;
+}
+.td-select{
+  width:100%;
+  padding: 11px 12px;
+  border-radius: 12px;
+  border:1px solid var(--stroke);
+  outline:none;
+  background:#fff;
+  margin-top:10px;
+}
+
+.td-kpis{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+.td-kpi{
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--stroke);
+  background: #fff;
+}
+.td-kpi .label{font-size:12px;color:var(--muted)}
+.td-kpi .value{font-size:24px;font-weight:900;margin-top:6px}
+
+.td-main{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.td-two{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.td-chartBox{
+  height: 290px;
+}
+
+.td-right{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.td-table{
+  width:100%;
+  border-collapse: collapse;
+}
+.td-table th{
+  text-align:left;
+  font-size:12px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--stroke);
+  padding: 10px 8px;
+}
+.td-table td{
+  border-bottom: 1px solid var(--stroke);
+  padding: 10px 8px;
+  font-size: 13px;
+}
+
+.td-mini{
+  display:flex;
+  gap:12px;
+  padding: 14px 16px;
+  align-items:center;
+}
+.td-avatar{
+  width:44px;height:44px;border-radius:14px;
+  background: linear-gradient(135deg, rgba(109,40,217,.25), rgba(79,70,229,.18));
+  border: 1px solid var(--stroke);
+}
+.td-mini .name{font-weight:800}
+.td-mini .sub{font-size:12px;color:var(--muted)}
+
+@media (max-width: 1100px){
+  .td-grid{ grid-template-columns: 1fr; }
+  .td-two{ grid-template-columns: 1fr; }
+}

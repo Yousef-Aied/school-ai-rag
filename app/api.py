@@ -12,7 +12,11 @@ from app.llm.groq_client import ask_groq
 
 from app.quiz.router import router as quiz_router
 
+from app.behavior.router import router as behavior_router
+
 from typing import Optional
+
+
 
 # (Loader → Splitter → Indexer → Retriever → API)
 app = FastAPI(title="School AI RAG API")
@@ -71,5 +75,10 @@ def chat(req: ChatRequest):
     return {"answer": answer}
 
 
-app.include_router(quiz_router)
 # Quiz API is under /api/quiz
+app.include_router(quiz_router)
+
+
+
+# Behavior API is under /api/behavior
+app.include_router(behavior_router)

@@ -1665,6 +1665,601 @@
           "correct_index": 0
         }
       ]
+    },
+    "qz_fdd96722ea": {
+      "quiz_id": "qz_fdd96722ea",
+      "student_id": 1,
+      "conversation_id": "8627e62e-f760-4c9c-abdd-e5376d6a5e38",
+      "created_at": 1769213789,
+      "topic": "Pyramids",
+      "questions": [
+        {
+          "question_id": "q_79daa2cb",
+          "question_text": "What is a pyramid?",
+          "choices": [
+            "A solid figure formed by line segments joining every point on the sides and every interior points of a polygonal region with a point outside of the plane of the polygon.",
+            "A type of triangle with three equal sides.",
+            "A type of quadrilateral with four equal sides.",
+            "A type of polygon with five equal sides."
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_7a8e6cd0",
+          "question_text": "What is the name of the vertex of the pyramid?",
+          "choices": [
+            "Base",
+            "Lateral face",
+            "Vertex",
+            "Altitude"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_0a082956",
+          "question_text": "What is the name of the base of the pyramid?",
+          "choices": [
+            "Vertex",
+            "Lateral face",
+            "Base",
+            "Altitude"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_0ef3f823",
+          "question_text": "What is the name of the lateral faces of the pyramid?",
+          "choices": [
+            "Vertex",
+            "Lateral face",
+            "Base",
+            "Altitude"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_598d30b5",
+          "question_text": "What is the name of the height of the pyramid?",
+          "choices": [
+            "Vertex",
+            "Lateral face",
+            "Base",
+            "Altitude"
+          ],
+          "correct_index": 3
+        },
+        {
+          "question_id": "q_b5055311",
+          "question_text": "What is the name of the base edge of the pyramid?",
+          "choices": [
+            "Vertex",
+            "Lateral face",
+            "Base",
+            "Altitude"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_43d6787b",
+          "question_text": "What is the name of the lateral edge of the pyramid?",
+          "choices": [
+            "Vertex",
+            "Lateral face",
+            "Base",
+            "Altitude"
+          ],
+          "correct_index": 3
+        },
+        {
+          "question_id": "q_e006aa9a",
+          "question_text": "What is a regular pyramid?",
+          "choices": [
+            "A pyramid with a square base and four equal sides.",
+            "A pyramid with a triangular base and three equal sides.",
+            "A pyramid with a regular polygon as its base and all lateral edges of equal length.",
+            "A pyramid with a quadrilateral base and four equal sides."
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_387bda57",
+          "question_text": "What is the altitude of a pyramid?",
+          "choices": [
+            "The perpendicular distance from the vertex to the point of the base.",
+            "The length of the altitude of a lateral face of the pyramid.",
+            "The length of the base of the pyramid.",
+            "The length of the lateral edge of the pyramid."
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_b929e703",
+          "question_text": "What is the slant height of a pyramid?",
+          "choices": [
+            "The length of the altitude of a lateral face of the pyramid.",
+            "The length of the base of the pyramid.",
+            "The length of the lateral edge of the pyramid.",
+            "The length of the altitude of the pyramid."
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "qz_1a5fac9b5a": {
+      "quiz_id": "qz_1a5fac9b5a",
+      "student_id": 1,
+      "conversation_id": "5550dae1-7f07-4609-b01c-0d80efb708e6",
+      "created_at": 1769213922,
+      "topic": "Explain linear equations",
+      "questions": [
+        {
+          "question_id": "q_b622cd62",
+          "question_text": "What is the main concept of a linear equation?",
+          "choices": [
+            "A linear equation is a type of quadratic equation.",
+            "A linear equation is a type of polynomial equation.",
+            "A linear equation is an equation in which the highest power of the variable is 1.",
+            "A linear equation is an equation in which the variable is squared."
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_28b3c5c2",
+          "question_text": "What is the purpose of solving a linear equation?",
+          "choices": [
+            "To find the value of the variable.",
+            "To find the value of the constant.",
+            "To find the value of the coefficient.",
+            "To find the value of the exponent."
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_5c655548",
+          "question_text": "What is the process of solving a linear equation called?",
+          "choices": [
+            "Simplification.",
+            "Transformation.",
+            "Equation solving.",
+            "Variable elimination."
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_81aab155",
+          "question_text": "What is the rule of transformation of equations?",
+          "choices": [
+            "Addition and subtraction can be performed in any order.",
+            "Multiplication and division can be performed in any order.",
+            "The distributive property can be applied to simplify equations.",
+            "The associative property can be applied to simplify equations."
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_aad8831c",
+          "question_text": "What is the distributive property of multiplication over addition?",
+          "choices": [
+            "a(b + c) = ab + ac.",
+            "a(b - c) = ab - ac.",
+            "a(b + c) = ab - ac.",
+            "a(b - c) = ab + ac."
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_e1148919",
+          "question_text": "What is the associative property of multiplication?",
+          "choices": [
+            "a(b + c) = ab + ac.",
+            "a(b - c) = ab - ac.",
+            "a(b + c) = ab - ac.",
+            "a(b - c) = ab + ac."
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_6638a791",
+          "question_text": "What is the Cartesian coordinate plane?",
+          "choices": [
+            "A plane with two perpendicular number lines.",
+            "A plane with two parallel number lines.",
+            "A plane with two intersecting number lines.",
+            "A plane with two non-perpendicular number lines."
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_4960fcd2",
+          "question_text": "What is the origin of the Cartesian coordinate plane?",
+          "choices": [
+            "The point where the two number lines intersect.",
+            "The point where the two number lines are parallel.",
+            "The point where the two number lines are perpendicular.",
+            "The point where the two number lines are non-intersecting."
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_4b2ef9ab",
+          "question_text": "What is the X-coordinate of a point on the Cartesian coordinate plane?",
+          "choices": [
+            "The distance from the origin to the point along the Y-axis.",
+            "The distance from the origin to the point along the X-axis.",
+            "The distance from the origin to the point along the Z-axis.",
+            "The distance from the origin to the point along the W-axis."
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_9ca662a2",
+          "question_text": "What is the Y-coordinate of a point on the Cartesian coordinate plane?",
+          "choices": [
+            "The distance from the origin to the point along the X-axis.",
+            "The distance from the origin to the point along the Y-axis.",
+            "The distance from the origin to the point along the Z-axis.",
+            "The distance from the origin to the point along the W-axis."
+          ],
+          "correct_index": 1
+        }
+      ]
+    },
+    "qz_fcfb5d7bbc": {
+      "quiz_id": "qz_fcfb5d7bbc",
+      "student_id": 1,
+      "conversation_id": "169664df-fbf5-4803-b084-f3985c668e3f",
+      "created_at": 1769265741,
+      "topic": "first lesson in mathematics",
+      "questions": [
+        {
+          "question_id": "q_f6dd956e",
+          "question_text": "What is the topic of the first lesson in mathematics?",
+          "choices": [
+            "Right Angled Triangles",
+            "Pressure",
+            "Motion in One Dimension",
+            "Squares and Square Roots"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_fa73fa3f",
+          "question_text": "What is the name of the theorem that states 'A moving object has a natural tendency to come to rest'?",
+          "choices": [
+            "Aristotle's Theorem",
+            "Newton's Law",
+            "Aristotle's Principle",
+            "Laws of Motion"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_88b5ed4d",
+          "question_text": "What is the name of the unit that deals with the concept of pressure?",
+          "choices": [
+            "Pressure Unit",
+            "Motion Unit",
+            "Right Angled Triangles Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_90728af8",
+          "question_text": "What is the name of the concept that deals with the sum of two even numbers?",
+          "choices": [
+            "Even Numbers",
+            "Odd Numbers",
+            "Consecutive Integers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_c5283b6c",
+          "question_text": "What is the name of the property that states 'A proof is an argument to show that a given statement is true'?",
+          "choices": [
+            "Definition",
+            "Postulate",
+            "Theorem",
+            "Proof"
+          ],
+          "correct_index": 3
+        },
+        {
+          "question_id": "q_6805a9a0",
+          "question_text": "What is the name of the unit that deals with the concept of linear equations and inequalities?",
+          "choices": [
+            "Linear Equations and Inequalities Unit",
+            "Right Angled Triangles Unit",
+            "Pressure Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_55b181af",
+          "question_text": "What is the name of the concept that deals with the sum of two consecutive odd integers?",
+          "choices": [
+            "Consecutive Integers",
+            "Odd Numbers",
+            "Even Numbers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_977bef8d",
+          "question_text": "What is the name of the theorem that states 'A moving object has a natural tendency to come to rest'?",
+          "choices": [
+            "Aristotle's Theorem",
+            "Newton's Law",
+            "Aristotle's Principle",
+            "Laws of Motion"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_2383500c",
+          "question_text": "What is the name of the unit that deals with the concept of motion in one dimension?",
+          "choices": [
+            "Motion in One Dimension Unit",
+            "Right Angled Triangles Unit",
+            "Pressure Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_0eaa9ab1",
+          "question_text": "What is the name of the concept that deals with the sum of two even numbers?",
+          "choices": [
+            "Even Numbers",
+            "Odd Numbers",
+            "Consecutive Integers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "qz_e752efee8b": {
+      "quiz_id": "qz_e752efee8b",
+      "student_id": 1,
+      "conversation_id": "169664df-fbf5-4803-b084-f3985c668e3f",
+      "created_at": 1769265741,
+      "topic": "first lesson in mathematics",
+      "questions": [
+        {
+          "question_id": "q_43ccc794",
+          "question_text": "What is the topic of the first lesson in mathematics?",
+          "choices": [
+            "Right Angled Triangles",
+            "Pressure",
+            "Motion in One Dimension",
+            "Squares and Square Roots"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_c28c436d",
+          "question_text": "What is the name of the theorem that states 'A moving object has a natural tendency to come to rest'?",
+          "choices": [
+            "Aristotle's Theorem",
+            "Newton's Law",
+            "Aristotle's Principle",
+            "Laws of Motion"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_14799f38",
+          "question_text": "What is the name of the unit that deals with the concept of pressure?",
+          "choices": [
+            "Pressure Unit",
+            "Motion Unit",
+            "Right Angled Triangles Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_21fcefd9",
+          "question_text": "What is the name of the concept that deals with the sum of two even numbers?",
+          "choices": [
+            "Even Numbers",
+            "Odd Numbers",
+            "Consecutive Integers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_a8df4d81",
+          "question_text": "What is the name of the property that states 'A proof is an argument to show that a given statement is true'?",
+          "choices": [
+            "Definition",
+            "Postulate",
+            "Theorem",
+            "Proof"
+          ],
+          "correct_index": 3
+        },
+        {
+          "question_id": "q_5f8f97d7",
+          "question_text": "What is the name of the unit that deals with the concept of linear equations and inequalities?",
+          "choices": [
+            "Linear Equations and Inequalities Unit",
+            "Right Angled Triangles Unit",
+            "Pressure Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_6523833e",
+          "question_text": "What is the name of the concept that deals with the sum of two consecutive odd integers?",
+          "choices": [
+            "Consecutive Integers",
+            "Odd Numbers",
+            "Even Numbers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_af022e33",
+          "question_text": "What is the name of the theorem that states 'A moving object has a natural tendency to come to rest'?",
+          "choices": [
+            "Aristotle's Theorem",
+            "Newton's Law",
+            "Aristotle's Principle",
+            "Laws of Motion"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_d570ad97",
+          "question_text": "What is the name of the unit that deals with the concept of motion in one dimension?",
+          "choices": [
+            "Motion in One Dimension Unit",
+            "Right Angled Triangles Unit",
+            "Pressure Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_ec233288",
+          "question_text": "What is the name of the concept that deals with the sum of two even numbers?",
+          "choices": [
+            "Even Numbers",
+            "Odd Numbers",
+            "Consecutive Integers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "qz_6f91f0080f": {
+      "quiz_id": "qz_6f91f0080f",
+      "student_id": 1,
+      "conversation_id": "169664df-fbf5-4803-b084-f3985c668e3f",
+      "created_at": 1769265743,
+      "topic": "first lesson in mathematics",
+      "questions": [
+        {
+          "question_id": "q_e05d72f1",
+          "question_text": "What is the topic of the first lesson in mathematics?",
+          "choices": [
+            "Right Angled Triangles",
+            "Pressure",
+            "Motion in One Dimension",
+            "Squares and Square Roots"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_850ecd45",
+          "question_text": "What is the name of the theorem that states 'A moving object has a natural tendency to come to rest'?",
+          "choices": [
+            "Aristotle's Theorem",
+            "Newton's Law",
+            "Aristotle's Principle",
+            "Laws of Motion"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_694f78fa",
+          "question_text": "What is the name of the unit that deals with the concept of pressure?",
+          "choices": [
+            "Pressure Unit",
+            "Motion Unit",
+            "Right Angled Triangles Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_25e43427",
+          "question_text": "What is the name of the concept that deals with the sum of two even numbers?",
+          "choices": [
+            "Even Numbers",
+            "Odd Numbers",
+            "Consecutive Integers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_d573897a",
+          "question_text": "What is the name of the property that states 'A proof is an argument to show that a given statement is true'?",
+          "choices": [
+            "Definition",
+            "Postulate",
+            "Theorem",
+            "Proof"
+          ],
+          "correct_index": 3
+        },
+        {
+          "question_id": "q_21a22ab8",
+          "question_text": "What is the name of the unit that deals with the concept of linear equations and inequalities?",
+          "choices": [
+            "Linear Equations and Inequalities Unit",
+            "Right Angled Triangles Unit",
+            "Pressure Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_667b4039",
+          "question_text": "What is the name of the concept that deals with the sum of two consecutive odd integers?",
+          "choices": [
+            "Consecutive Integers",
+            "Odd Numbers",
+            "Even Numbers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_fde081b8",
+          "question_text": "What is the name of the theorem that states 'A moving object has a natural tendency to come to rest'?",
+          "choices": [
+            "Aristotle's Theorem",
+            "Newton's Law",
+            "Aristotle's Principle",
+            "Laws of Motion"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_0353a67e",
+          "question_text": "What is the name of the unit that deals with the concept of motion in one dimension?",
+          "choices": [
+            "Motion in One Dimension Unit",
+            "Right Angled Triangles Unit",
+            "Pressure Unit",
+            "Squares and Square Roots Unit"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_319637e9",
+          "question_text": "What is the name of the concept that deals with the sum of two even numbers?",
+          "choices": [
+            "Even Numbers",
+            "Odd Numbers",
+            "Consecutive Integers",
+            "Perfect Squares"
+          ],
+          "correct_index": 0
+        }
+      ]
     }
   },
   "attempts": [
@@ -3666,6 +4261,78 @@
         }
       ],
       "created_at": 1767040030
+    },
+    {
+      "attempt_id": "att_e2574cda5e",
+      "quiz_id": "qz_1a5fac9b5a",
+      "student_id": 1,
+      "conversation_id": "5550dae1-7f07-4609-b01c-0d80efb708e6",
+      "score": 5,
+      "max_score": 10,
+      "completion_rate": 1.0,
+      "answers": [
+        {
+          "question_id": "q_b622cd62",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_28b3c5c2",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_5c655548",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_81aab155",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_aad8831c",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_e1148919",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_4960fcd2",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_6638a791",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_4b2ef9ab",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_9ca662a2",
+          "selected_index": 1
+        }
+      ],
+      "created_at": 1769213952
+    },
+    {
+      "attempt_id": "att_883d69097d",
+      "quiz_id": "qz_6f91f0080f",
+      "student_id": 1,
+      "conversation_id": "169664df-fbf5-4803-b084-f3985c668e3f",
+      "score": 0,
+      "max_score": 10,
+      "completion_rate": 0.0,
+      "answers": [
+        {
+          "question_id": "q_0eaa9ab1",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_2383500c",
+          "selected_index": 1
+        }
+      ],
+      "created_at": 1769265763
     }
   ]
 }
