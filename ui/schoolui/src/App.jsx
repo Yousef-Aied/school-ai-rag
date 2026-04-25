@@ -5,6 +5,7 @@ import Chat from "./pages/Chat";
 import Quiz from "./pages/Quiz";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
+import StudentQuizPage from "./pages/StudentQuizPage";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/student-quiz/:studentQuizAssignmentId" element={<StudentQuizPage />} />
       </Routes>
     </BrowserRouter>
   );

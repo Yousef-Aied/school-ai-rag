@@ -16,10 +16,14 @@ _model = None
 _scaler = None
 
 CLUSTER_LABELS = {
-    0: "Cluster 0",
-    1: "Cluster 1",
-    2: "Cluster 2",
-    3: "Cluster 3",
+    # 0: "Cluster 0",
+    # 1: "Cluster 1",
+    # 2: "Cluster 2",
+    # 3: "Cluster 3",
+    0: "Visual-Focused / High Achiever", # He is interested in sources and media, and his grades are high.
+    1: "At-Risk / Low Engagement",       # Low grades, poor attendance, needs support
+    2: "Social / Collaborative Learner", # He tends towards discussions and interaction
+    3: "Independent / Steady Learner",   # Regular study hours, stable performance
 }
 
 def load_assets():
@@ -34,10 +38,10 @@ def load_assets():
 def predict_cluster(payload: dict) -> tuple[int, str]:
     model, scaler = load_assets()
 
-    # نضمن نفس الأعمدة ونفس الترتيب
+    # guarantee the same columns and the same arrangement
     df = pd.DataFrame([payload]).reindex(columns=FEATURES)
 
-    # تحويل آمن للأرقام (لو في string رقمية تتحول، لو كلمة يطلع error واضح)
+    # Safe conversion of numbers (if there is a string, it is converted; if it is a word, a clear error appears)
     df = df.apply(pd.to_numeric, errors="raise").astype(float)
 
     # Scaling

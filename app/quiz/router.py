@@ -4,7 +4,10 @@ from fastapi import APIRouter, HTTPException
 from typing import Any, Dict, List
 from app.quiz.schemas import (
     GenerateQuizRequest, GenerateQuizResponse, QuizQuestionPublic,
-    SubmitQuizRequest, SubmitQuizResponse, ReviewItem
+    SubmitQuizRequest, SubmitQuizResponse, ReviewItem,
+    QuizTemplateGenerateRequest, QuizTemplateGenerateResponse,
+    QuizTemplateQuestionPublic, QuizTemplateSubmitRequest,
+    QuizTemplateSubmitResponse
 )
 from app.quiz.store import load_store, save_store
 from app.rag.indexer import build_or_load_vectorstore
@@ -222,3 +225,130 @@ def get_quiz(quiz_id: str):
         "conversation_id": quiz.get("conversation_id"),
         "questions": questions_public,
     }
+    
+# ===============================
+# createTeacherQuizAssignment API   
+@router.post("/template/generate", response_model=QuizTemplateGenerateResponse)
+def generate_quiz_template(payload: QuizTemplateGenerateRequest):
+    vs = get_vectorstore()
+
+    topic = payload.topic or "the study material"
+
+    context = retrieve_context(
+        vs,
+        topic,
+        k=6,
+        grade=payload.grade_level,
+        subject=payload.subject
+    )
+
+    # context = retrieve_context(vs, topic, k=6)
+
+    items = generate_mcq_json(topic, context, payload.number_of_questions)
+
+    template_id = f"tmpl_{uuid.uuid4().hex[:10]}"
+    store = load_store()
+
+    questions_internal = []
+    questions_public = []
+
+    for it in items:
+        qid = f"q_{uuid.uuid4().hex[:8]}"
+        q_text = str(it.get("question_text", "")).strip()
+        choices = it.get("choices", [])
+        correct = int(it.get("correct_index", 0))
+
+        if not q_text or not isinstance(choices, list) or len(choices) != 4:
+            raise HTTPException(status_code=500, detail="Invalid question format from LLM")
+
+        questions_internal.append({
+            "question_id": qid,
+            "question_text": q_text,
+            "choices": choices,
+            "correct_index": correct,
+        })
+
+        questions_public.append(QuizTemplateQuestionPublic(
+            question_id=qid,
+            question_text=q_text,
+            choices=choices
+        ))
+
+    store["templates"][template_id] = {
+        "template_id": template_id,
+        "topic": topic,
+        "grade_level": payload.grade_level,
+        "subject": payload.subject,
+        "number_of_questions": payload.number_of_questions,
+        "created_at": int(time.time()),
+        "questions": questions_internal
+    }
+
+    save_store(store)
+
+    return QuizTemplateGenerateResponse(
+        template_id=template_id,
+        questions=questions_public
+    )
+
+
+@router.get("/template/{template_id}")
+def get_quiz_template(template_id: str):
+    store = load_store()
+    template = store["templates"].get(template_id)
+
+    if not template:
+        raise HTTPException(status_code=404, detail="Quiz template not found")
+
+    questions_public = [
+        {
+            "question_id": q["question_id"],
+            "question_text": q["question_text"],
+            "choices": q["choices"],
+        }
+        for q in template["questions"]
+    ]
+
+    return {
+        "template_id": template_id,
+        "questions": questions_public
+    }
+
+
+@router.post("/template/{template_id}/submit", response_model=QuizTemplateSubmitResponse)
+def submit_quiz_template(template_id: str, payload: QuizTemplateSubmitRequest):
+    store = load_store()
+    template = store["templates"].get(template_id)
+
+    if not template:
+        raise HTTPException(status_code=404, detail="Quiz template not found")
+
+    questions = template["questions"]
+    qmap = {q["question_id"]: q for q in questions}
+
+    score = 0
+
+    for ans in payload.answers:
+        q = qmap.get(ans.question_id)
+        if not q:
+            continue
+
+        if ans.selected_index == q["correct_index"]:
+            score += 1
+
+    max_score = len(questions)
+
+    store["template_attempts"].append({
+        "attempt_id": f"tatt_{uuid.uuid4().hex[:10]}",
+        "template_id": template_id,
+        "score": score,
+        "max_score": max_score,
+        "created_at": int(time.time()),
+        "answers": [a.model_dump() for a in payload.answers]
+    })
+    save_store(store)
+
+    return QuizTemplateSubmitResponse(
+        score=score,
+        max_score=max_score
+    )

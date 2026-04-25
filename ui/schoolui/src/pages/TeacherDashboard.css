@@ -5,8 +5,6 @@
   --stroke:#e6e9f5;
   --text:#1b1f2a;
   --muted:#6b7280;
-  --primary:#6d28d9; /* purple */
-  --primary2:#4f46e5;
   --shadow: 0 14px 40px rgba(16,24,40,0.08);
   --radius:16px;
 }
@@ -17,6 +15,7 @@
   color: var(--text);
 }
 
+/* Topbar */
 .td-topbar{
   height: 74px;
   background: linear-gradient(90deg, #4c1d95, #5b21b6, #4f46e5);
@@ -56,6 +55,7 @@
   font-size:12px;
 }
 
+/* Layout */
 .td-wrap{
   max-width: 1200px;
   margin: 18px auto;
@@ -64,10 +64,23 @@
 
 .td-grid{
   display:grid;
-  grid-template-columns: 280px 1fr 360px;
+  grid-template-columns: 267px 1fr 360px;
   gap: 16px;
 }
 
+.td-main{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.td-right{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Cards */
 .td-card{
   background: var(--card);
   border: 1px solid var(--stroke);
@@ -79,10 +92,12 @@
   padding: 14px 16px 0;
   font-weight:800;
 }
+
 .td-card-b{
   padding: 14px 16px 16px;
 }
 
+/* Filters */
 .td-filter{
   padding: 16px;
 }
@@ -96,9 +111,10 @@
   margin-top:10px;
 }
 
+/* KPI */
 .td-kpis{
   display:grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
   padding: 16px;
 }
@@ -111,28 +127,122 @@
 .td-kpi .label{font-size:12px;color:var(--muted)}
 .td-kpi .value{font-size:24px;font-weight:900;margin-top:6px}
 
-.td-main{
-  display:grid;
-  grid-template-columns: 1fr;
+.td-kpiPurple{
+  background: rgba(109,40,217,.08);
+  border-color: rgba(109,40,217,.22);
+}
+.td-kpiGreen{
+  background: rgba(34,197,94,.08);
+  border-color: rgba(34,197,94,.22);
+}
+
+/* Stack: cards under each other (like sample) */
+.td-stack{
+  display:flex;
+  flex-direction:column;
   gap: 16px;
 }
 
-.td-two{
+/* Header row + chips */
+.td-card-hRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.td-chipRow{ display:flex; gap:8px; }
+.td-chip{
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#eef2ff;
+  color:#4338ca;
+  border:1px solid #e5e7eb;
+}
+
+/* Student Count card (donut + list) */
+.td-clusterCard .td-card-b{ padding-top: 10px; }
+
+.td-clusterLayout{
   display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: 260px 1fr;
+  gap:18px;
+  align-items:center;
 }
 
-.td-chartBox{
-  height: 290px;
+/* Donut */
+.td-donutBox{
+  position:relative;
+  width:100%;
+  height:220px;
 }
 
-.td-right{
+.td-donutCenter{
+  position:absolute;
+  inset:0;
   display:grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  place-content:center;
+  text-align:center;
+  pointer-events:none;
 }
 
+.td-donutPct{
+  font-size:22px;
+  font-weight:800;
+  color:#111827;
+}
+
+.td-donutSub{
+  font-size:12px;
+  color:#6b7280;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* Cluster list */
+.td-clusterList{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.td-clusterRow{
+  display:grid;
+  grid-template-columns: 170px 1fr 90px;
+  gap:12px;
+  align-items:center;
+}
+
+.td-clusterLeft{ display:flex; align-items:center; gap:10px; }
+.td-dot{ width:10px; height:10px; border-radius:999px; }
+.td-clusterName{ font-weight:600; color:#111827; font-size:13px; }
+
+.td-barBg{
+  height:10px;
+  background:#eef2ff;
+  border-radius:999px;
+  overflow:hidden;
+  border:1px solid #e5e7eb;
+}
+
+.td-barFill{
+  height:100%;
+  border-radius:999px;
+}
+
+.td-clusterRight{
+  text-align:right;
+  line-height:1.1;
+}
+
+.td-pct{ font-weight:800; font-size:12px; color:#111827; }
+.td-count{ font-size:12px; color:#6b7280; margin-top:3px; }
+
+/* Charts */
+.td-chartBox{ height: 340px; }
+.td-chartWide{ height: 260px; }
+
+/* Table */
 .td-table{
   width:100%;
   border-collapse: collapse;
@@ -150,6 +260,7 @@
   font-size: 13px;
 }
 
+/* Highlights */
 .td-mini{
   display:flex;
   gap:12px;
@@ -161,10 +272,71 @@
   background: linear-gradient(135deg, rgba(109,40,217,.25), rgba(79,70,229,.18));
   border: 1px solid var(--stroke);
 }
+.td-avatarPurple{
+  background: linear-gradient(135deg, rgba(109,40,217,.25), rgba(79,70,229,.18));
+}
+.td-avatarGreen{
+  background: linear-gradient(135deg, rgba(34,197,94,.22), rgba(22,163,74,.18));
+}
 .td-mini .name{font-weight:800}
 .td-mini .sub{font-size:12px;color:var(--muted)}
 
+
+
+
+
+.td-quizForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.td-quizGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.td-quizActions {
+  margin-top: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.td-quizSuccess {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.td-quizError {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+#QuizStudents{
+    background: #0043ffdb;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+}
+/* Responsive */
+@media (max-width: 1000px) {
+  .td-quizGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 @media (max-width: 1100px){
   .td-grid{ grid-template-columns: 1fr; }
-  .td-two{ grid-template-columns: 1fr; }
+  .td-kpis{ grid-template-columns: 1fr 1fr; }
 }
+
+@media (max-width: 900px){
+  .td-clusterLayout{ grid-template-columns: 1fr; }
+  .td-clusterRow{ grid-template-columns: 1fr; gap: 8px; }
+  .td-clusterRight{ text-align:left; }
+}
+

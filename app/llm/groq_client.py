@@ -14,12 +14,14 @@ if not api_key:
 client = Groq(api_key=api_key)
 
 # System Prompt or System Message
-def ask_groq(question: str, context: str) -> str:
+def ask_groq(question: str, context: str, style_hint: str = "") -> str:
     messages: list[ChatCompletionMessageParam] = [
         {
             "role": "system",
             "content": (
                 "You are a helpful educational tutor.\n\n"
+                "Teaching style (IMPORTANT):\n"
+                f"{style_hint}\n\n"
 
                 "Conversation rules:\n"
                 "1. If the user greets you (e.g., 'hello', 'hi', 'hey'), respond politely with a short greeting and explain how you can help with the study material.\n"
@@ -36,6 +38,9 @@ def ask_groq(question: str, context: str) -> str:
                 "- Separate sections with blank lines.\n\n"
 
                 "When answering study questions, follow this structure:\n"
+                "[Optional: A very short encouraging remark if appropriate]\n\n"
+                "## Summary\n"
+                "- Brief overview from the context.\n\n"
                 "## Summary\n"
                 "- Brief overview from the context.\n\n"
                 "## Explanation\n"
@@ -53,8 +58,8 @@ def ask_groq(question: str, context: str) -> str:
     completion = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=messages,
-        temperature=0.2,
-        max_completion_tokens=700,
+        temperature=0.4,
+        max_completion_tokens=700, #1500 | 2048
         top_p=1,
         stream=False,
     )

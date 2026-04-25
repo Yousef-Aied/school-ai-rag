@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 
 class BehaviorInput(BaseModel):
+    student_id: Optional[int] = None
     StudyHours: float
     Attendance: float
     Resources: float
@@ -20,6 +21,7 @@ class BehaviorInput(BaseModel):
 class BehaviorPredictResponse(BaseModel):
     cluster: int
     label: str
+    preset: Optional[Dict[str, Any]] = None
 
 class ClusterStatsResponse(BaseModel):
     counts: Dict[str, int]
