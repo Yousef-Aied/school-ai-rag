@@ -19,7 +19,7 @@ from app.analyze.router import router as analyze_router
 from app.analyze.store import get_profile
 
 # Prediction service
-from app.prediction.router import router as prediction_router
+# from app.prediction.router import router as prediction_router
 
 import requests
 
@@ -157,4 +157,4 @@ def chat(req: ChatRequest):
 # -----------------------------
 app.include_router(quiz_router)
 app.include_router(analyze_router)
-app.include_router(prediction_router)
+# app.include_router(prediction_router)
