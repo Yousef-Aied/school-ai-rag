@@ -52,6 +52,7 @@ class QuizTemplateGenerateRequest(BaseModel):
     grade_level: Optional[int] = None
     subject: Optional[str] = None
     number_of_questions: int = 10
+    units: list[str] = []
 
 class QuizTemplateQuestionPublic(BaseModel):
     question_id: str

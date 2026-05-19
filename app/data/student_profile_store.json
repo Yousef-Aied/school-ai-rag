@@ -1,20 +1,41 @@
 {
   "1": {
     "student_id": 1,
-    "conversation_id": "79cf84f5-9c5e-4688-b09b-f1447b8ae0c1",
+    "conversation_id": "093c17e3-8a44-4bc7-a1e9-0e9d439e8571",
     "stress_level": 20,
     "motivation": 80,
-    "confidence": 0.7,
+    "confidence": 0.8,
     "signals": [
-      "first lesson in mathematics",
-      "nervous or unsure",
-      "don't worry",
-      "take it one step at a time",
-      "right-angled triangles",
-      "trigonometric ratios",
-      "pyramids",
-      "linear equations",
-      "fantastic math journey"
+      "The user initially seems confused about the first lesson in mathematics.",
+      "The assistant provides a clear explanation of the concept of right-angled triangles.",
+      "The user appears to be engaged and motivated to learn about right-angled triangles.",
+      "The assistant uses a step-by-step approach to explain the properties and theorems of right-angled triangles.",
+      "The user asks clarifying questions, indicating a desire for further understanding."
+    ]
+  },
+  "2": {
+    "student_id": 2,
+    "conversation_id": "79fff344-6dd3-4db4-872a-442ccf9945f4",
+    "stress_level": 20,
+    "motivation": 80,
+    "confidence": 0.8,
+    "signals": [
+      "The user is asking for an explanation of the first lesson in mathematics, indicating a desire to learn.",
+      "The assistant is providing a clear and structured explanation, suggesting a positive and supportive tone.",
+      "The user is not expressing any immediate concerns or difficulties, indicating a relatively low stress level."
+    ]
+  },
+  "3": {
+    "student_id": 3,
+    "conversation_id": "79fff344-6dd3-4db4-872a-442ccf9945f4",
+    "stress_level": 20,
+    "motivation": 60,
+    "confidence": 0.8,
+    "signals": [
+      "Hello Omar Khaled",
+      "I'm glad you're here to learn more about mathematics",
+      "Please let me know what you'd like to focus on today",
+      "Let me know if you have any questions or if you'd like to explore any of these topics further"
     ]
   }
 }

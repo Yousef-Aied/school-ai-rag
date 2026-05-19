@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   getStudentQuizAssignmentDetails,
   submitStudentQuizAssignment,
@@ -7,6 +7,11 @@ import {
 
 export default function StudentQuizPage() {
   const { studentQuizAssignmentId } = useParams();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const studentId = params.get("studentId");
+
+
 
   const [data, setData] = useState(null);
   const [answers, setAnswers] = useState({});
@@ -34,12 +39,17 @@ export default function StudentQuizPage() {
       setSubmitting(true);
       setErr("");
 
-      const payload = Object.entries(answers).map(([questionId, selectedIndex]) => ({
-        questionId,
-        selectedIndex,
-      }));
+      const payload = Object.entries(answers).map(
+        ([questionId, selectedIndex]) => ({
+          questionId,
+          selectedIndex,
+        }),
+      );
 
-      const res = await submitStudentQuizAssignment(studentQuizAssignmentId, payload);
+      const res = await submitStudentQuizAssignment(
+        studentQuizAssignmentId,
+        payload,
+      );
       setResult(res);
     } catch (e) {
       setErr(String(e));
@@ -49,14 +59,34 @@ export default function StudentQuizPage() {
   }
 
   if (loading) return <div style={{ padding: 24 }}>Loading quiz...</div>;
-  if (err) return <div style={{ padding: 24, color: "crimson" }}>Error: {err}</div>;
+  if (err)
+    return <div style={{ padding: 24, color: "crimson" }}>Error: {err}</div>;
   if (!data) return <div style={{ padding: 24 }}>No quiz found.</div>;
 
   return (
     <div style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
+      <button
+        onClick={() =>
+          navigate(`/student-dashboard?studentId=${studentId}`)
+        }
+        style={{
+          padding: "10px 16px",
+          borderRadius: 12,
+          border: "none",
+          background: "#0f9ba8",
+          color: "white",
+          cursor: "pointer",
+          marginBottom: 20,
+          fontWeight: 700,
+        }}
+      >
+        ← Back to Dashboard
+      </button>
+
       <h1>{data.topic}</h1>
       <p>
-        <strong>Subject:</strong> {data.subject} | <strong>Grade:</strong> {data.gradeLevel}
+        <strong>Subject:</strong> {data.subject} | <strong>Grade:</strong>{" "}
+        {data.gradeLevel}
       </p>
 
       {data.isSubmitted && (
@@ -140,6 +170,23 @@ export default function StudentQuizPage() {
           }}
         >
           <strong>Result:</strong> {result.score} / {result.maxScore}
+          <button
+            onClick={() =>
+              navigate(`/student-dashboard?studentId=${studentId}`)
+            }
+            style={{
+              padding: "10px 16px",
+              borderRadius: 12,
+              border: "none",
+              background: "#0f9ba8",
+              color: "white",
+              cursor: "pointer",
+              marginBottom: 20,
+              fontWeight: 700,
+            }}
+          >
+            ← Back to Dashboard
+          </button>
         </div>
       )}
     </div>

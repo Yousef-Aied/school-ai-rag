@@ -2736,6 +2736,244 @@
           "correct_index": 2
         }
       ]
+    },
+    "qz_b4180a6009": {
+      "quiz_id": "qz_b4180a6009",
+      "student_id": 1,
+      "conversation_id": "e9ea7d20-3175-4a1d-9355-ebe6760bf0f6",
+      "created_at": 1778282334,
+      "topic": "Linear Inequalities",
+      "questions": [
+        {
+          "question_id": "q_71d2e7d2",
+          "question_text": "Solve the inequality 3x - 2(2x - 7) < 2(3 + x) - 4, x ∈ N.",
+          "choices": [
+            "x > 4",
+            "x < 4",
+            "x = 4",
+            "x ≤ 4"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_c5c9b8f0",
+          "question_text": "Solve the inequality -(x + 4) > -(x - 2), x ∈ Z.",
+          "choices": [
+            "x < -6",
+            "x > -6",
+            "x = -6",
+            "x ≤ -6"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_d224f559",
+          "question_text": "Solve the inequality 8x - 5 > 13 - x, x ∈ W.",
+          "choices": [
+            "x > 2",
+            "x < 2",
+            "x = 2",
+            "x ≤ 2"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_17d03ddf",
+          "question_text": "Solve the inequality 4 - x > -x - 8, x ∈ Q.",
+          "choices": [
+            "x < -6",
+            "x > -6",
+            "x = -6",
+            "x ≤ -6"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_55c38319",
+          "question_text": "Solve the inequality -3x + 8 < 22, x ∈ W.",
+          "choices": [
+            "x < 6",
+            "x > 6",
+            "x = 6",
+            "x ≤ 6"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_f8ed4264",
+          "question_text": "Solve the inequality 4x - 6 > 10, x ∈ N.",
+          "choices": [
+            "x > 4",
+            "x < 4",
+            "x = 4",
+            "x ≤ 4"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_b11c7a5c",
+          "question_text": "Solve the inequality -x + 7 < -x - 2, x ∈ Z.",
+          "choices": [
+            "x > 5",
+            "x < 5",
+            "x = 5",
+            "x ≤ 5"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_3463689f",
+          "question_text": "Solve the inequality 9 - x > 4 - x, x ∈ W.",
+          "choices": [
+            "x < 5",
+            "x > 5",
+            "x = 5",
+            "x ≤ 5"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_4ef387f9",
+          "question_text": "Solve the inequality -(2x + 3) > 0, x ∈ Z.",
+          "choices": [
+            "x < -1.5",
+            "x > -1.5",
+            "x = -1.5",
+            "x ≤ -1.5"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_95208a5e",
+          "question_text": "Solve the inequality -11x + 2 < 24, x ∈ Z.",
+          "choices": [
+            "x > -2",
+            "x < -2",
+            "x = -2",
+            "x ≤ -2"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "qz_2b8206d2d7": {
+      "quiz_id": "qz_2b8206d2d7",
+      "student_id": 1,
+      "conversation_id": "093c17e3-8a44-4bc7-a1e9-0e9d439e8571",
+      "created_at": 1778430956,
+      "topic": "seems to be an introduction to the concept of right-angled triangles",
+      "questions": [
+        {
+          "question_id": "q_578bd96e",
+          "question_text": "What is the name of the theorem that states a2 + b2 = c2 for a right-angled triangle?",
+          "choices": [
+            "Pythagoras' Theorem",
+            "Euclid's Theorem",
+            "Converse of Euclid's Theorem",
+            "None of the above"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_41476509",
+          "question_text": "What is the name of the theorem that states if a2 = cf and b2 = ce, then the triangle is right-angled?",
+          "choices": [
+            "Euclid's Theorem",
+            "Converse of Euclid's Theorem",
+            "Pythagoras' Theorem",
+            "None of the above"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_4de89fb7",
+          "question_text": "What is the name of the property that states the square of each shorter side of a triangle is equal to the product of the length of the longest side and the adjacent segment?",
+          "choices": [
+            "Pythagoras' Theorem",
+            "Euclid's Theorem",
+            "Converse of Euclid's Theorem",
+            "None of the above"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_8a650509",
+          "question_text": "What is the name of the triangle that has one angle equal to 90 degrees?",
+          "choices": [
+            "Right-angled triangle",
+            "Obtuse triangle",
+            "Acute triangle",
+            "Isosceles triangle"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_71a16dd1",
+          "question_text": "What is the name of the theorem that states if a2 = cf and b2 = ce, then the triangle is right-angled?",
+          "choices": [
+            "Converse of Euclid's Theorem",
+            "Euclid's Theorem",
+            "Pythagoras' Theorem",
+            "None of the above"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_166187c9",
+          "question_text": "What is the name of the property that states the square of the hypotenuse of a right-angled triangle is equal to the sum of the squares of the other two sides?",
+          "choices": [
+            "Pythagoras' Theorem",
+            "Euclid's Theorem",
+            "Converse of Euclid's Theorem",
+            "None of the above"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_d408690a",
+          "question_text": "What is the name of the theorem that states if a2 + b2 = c2, then the triangle is right-angled?",
+          "choices": [
+            "Pythagoras' Theorem",
+            "Euclid's Theorem",
+            "Converse of Euclid's Theorem",
+            "None of the above"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_456300be",
+          "question_text": "What is the name of the triangle that has two sides of equal length?",
+          "choices": [
+            "Isosceles triangle",
+            "Right-angled triangle",
+            "Obtuse triangle",
+            "Acute triangle"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_13ab38af",
+          "question_text": "What is the name of the theorem that states if a2 = cf and b2 = ce, then the triangle is right-angled?",
+          "choices": [
+            "Euclid's Theorem",
+            "Converse of Euclid's Theorem",
+            "Pythagoras' Theorem",
+            "None of the above"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_013b279e",
+          "question_text": "What is the name of the property that states the square of each side of a right-angled triangle is equal to the product of the lengths of the other two sides?",
+          "choices": [
+            "Pythagoras' Theorem",
+            "Euclid's Theorem",
+            "Converse of Euclid's Theorem",
+            "None of the above"
+          ],
+          "correct_index": 0
+        }
+      ]
     }
   },
   "attempts": [
@@ -4965,6 +5203,102 @@
         }
       ],
       "created_at": 1776396569
+    },
+    {
+      "attempt_id": "att_63a477976f",
+      "quiz_id": "qz_b4180a6009",
+      "student_id": 1,
+      "conversation_id": "e9ea7d20-3175-4a1d-9355-ebe6760bf0f6",
+      "score": 6,
+      "max_score": 10,
+      "completion_rate": 0.9,
+      "answers": [
+        {
+          "question_id": "q_71d2e7d2",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_c5c9b8f0",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_17d03ddf",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_55c38319",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_f8ed4264",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_b11c7a5c",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_3463689f",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_4ef387f9",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_95208a5e",
+          "selected_index": 0
+        }
+      ],
+      "created_at": 1778282348
+    },
+    {
+      "attempt_id": "att_193f689c6b",
+      "quiz_id": "qz_2b8206d2d7",
+      "student_id": 1,
+      "conversation_id": "093c17e3-8a44-4bc7-a1e9-0e9d439e8571",
+      "score": 1,
+      "max_score": 10,
+      "completion_rate": 0.9,
+      "answers": [
+        {
+          "question_id": "q_578bd96e",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_4de89fb7",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_8a650509",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_71a16dd1",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_166187c9",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_d408690a",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_456300be",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_13ab38af",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_013b279e",
+          "selected_index": 2
+        }
+      ],
+      "created_at": 1778430974
     }
   ],
   "templates": {
@@ -6407,6 +6741,846 @@
           "correct_index": 0
         }
       ]
+    },
+    "tmpl_0fd41bf003": {
+      "template_id": "tmpl_0fd41bf003",
+      "topic": "hgfh",
+      "grade_level": 8,
+      "subject": "Math",
+      "number_of_questions": 10,
+      "created_at": 1778262512,
+      "questions": [
+        {
+          "question_id": "q_c519a8fe",
+          "question_text": "What is the value of 3x2 - 4y2 + 8 when x = 6 and y = 2?",
+          "choices": [
+            "3",
+            "-304",
+            "108",
+            "348"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_8dbf98e2",
+          "question_text": "Find the value of y if y = x - 6 and x = 7.",
+          "choices": [
+            "49",
+            "7",
+            "43",
+            "45"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_daa7a1e4",
+          "question_text": "What is the value of yx + xy - x when x = 2 and y = 3?",
+          "choices": [
+            "9",
+            "-29",
+            "29",
+            "18"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_497e79d3",
+          "question_text": "What is the value of a^2 + b^2 when a = 4 and b = 7?",
+          "choices": [
+            "8",
+            "1",
+            "-3",
+            "50"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_adf7742d",
+          "question_text": "Simplify the expression (x^3 + 2x - 3) - (x^2 - 2x + 4).",
+          "choices": [
+            "x^3 - x^2 + 6x - 7",
+            "x^3 + x^2 - 6x + 7",
+            "x^3 + x^2 + 6x - 7",
+            "x^3 - x^2 - 6x + 7"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_86de5f74",
+          "question_text": "Simplify the expression 2x(3x + 4) - 3(x + 5).",
+          "choices": [
+            "6x^2 + 8x - 3x - 15",
+            "6x^2 + 8x - 3x + 15",
+            "6x^2 + 8x + 3x - 15",
+            "6x^2 + 8x - 3x + 15"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_55e292dc",
+          "question_text": "Simplify the expression x(y^2 + 5xy) + 2xy(3x - 2y).",
+          "choices": [
+            "x^2y^2 + 5x^2y^2 + 6x^2y^2 - 4xy^2",
+            "x^2y^2 + 5x^2y^2 - 6x^2y^2 - 4xy^2",
+            "x^2y^2 + 5x^2y^2 + 6x^2y^2 + 4xy^2",
+            "x^2y^2 + 5x^2y^2 - 6x^2y^2 + 4xy^2"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_2aa713ad",
+          "question_text": "Simplify the expression 2(a^2b^2 - 4a^3b^3) - 8(ab^2 - 3a^2b^2).",
+          "choices": [
+            "2a^2b^2 - 8a^3b^3 - 8ab^2 + 24a^2b^2",
+            "2a^2b^2 - 8a^3b^3 + 8ab^2 - 24a^2b^2",
+            "2a^2b^2 + 8a^3b^3 - 8ab^2 - 24a^2b^2",
+            "2a^2b^2 + 8a^3b^3 + 8ab^2 - 24a^2b^2"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_1b0fdc79",
+          "question_text": "What is the value of x^2 when x = 7?",
+          "choices": [
+            "49",
+            "64",
+            "81",
+            "100"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_204c853b",
+          "question_text": "What is the value of y^2 when y = 5?",
+          "choices": [
+            "25",
+            "36",
+            "49",
+            "64"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "tmpl_4f3af4a7e5": {
+      "template_id": "tmpl_4f3af4a7e5",
+      "topic": "hhhhh",
+      "grade_level": 8,
+      "subject": "Math",
+      "number_of_questions": 10,
+      "created_at": 1778263153,
+      "questions": [
+        {
+          "question_id": "q_5a64f354",
+          "question_text": "What is the value of h in the equation h = 2A?",
+          "choices": [
+            "2A",
+            "A",
+            "2",
+            "h"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_1a0310af",
+          "question_text": "What is the value of b in the equation bi = -b2?",
+          "choices": [
+            "-b2",
+            "b2",
+            "b",
+            "-b"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_8b1e9c6a",
+          "question_text": "What is the value of h in the equation h2 = 3?",
+          "choices": [
+            "3",
+            "1",
+            "2",
+            "3"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_b2a49579",
+          "question_text": "What is the value of x in the equation x = 6 and y = 2?",
+          "choices": [
+            "6",
+            "2",
+            "8",
+            "10"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_53226d0a",
+          "question_text": "What is the value of y in the equation y = x - 6 and x = 7?",
+          "choices": [
+            "1",
+            "7",
+            "43",
+            "45"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_7fcb983d",
+          "question_text": "What is the value of yx + xy - x in the equation x = 2 and y = 3?",
+          "choices": [
+            "9",
+            "-29",
+            "29",
+            "18"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_d5602a99",
+          "question_text": "What is the value of a in the equation a = 4 and b = 7?",
+          "choices": [
+            "4",
+            "7",
+            "8",
+            "1"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_8a4841cd",
+          "question_text": "What is the value of x in the equation (x3 + 2x - 3) - (x2 - 2x + 4) = ?",
+          "choices": [
+            "x3 - x2 + 6x - 7",
+            "x3 + x2 - 6x + 7",
+            "x3 - x2 - 6x + 7",
+            "x3 + x2 + 6x - 7"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_7c2d5a15",
+          "question_text": "What is the value of the height of the school building in the equation tan 30° = 1/√3?",
+          "choices": [
+            "10√3",
+            "10",
+            "10√2",
+            "10√5"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_fc0baa2b",
+          "question_text": "What are the three consecutive even numbers which add 792?",
+          "choices": [
+            "262, 264, 266",
+            "264, 266, 268",
+            "260, 262, 264",
+            "266, 268, 270"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "tmpl_1bee3e258c": {
+      "template_id": "tmpl_1bee3e258c",
+      "topic": "topic111",
+      "grade_level": 8,
+      "subject": "Math",
+      "number_of_questions": 10,
+      "created_at": 1778280987,
+      "questions": [
+        {
+          "question_id": "q_de89f249",
+          "question_text": "What is the definition of similar polygons?",
+          "choices": [
+            "Polygons that have the same shape but not necessarily the same size",
+            "Polygons that have the same size but not necessarily the same shape",
+            "Polygons that have the same shape and size",
+            "Polygons that have different shapes and sizes"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_2b61f5c7",
+          "question_text": "What is the volume of the cube in Figure 1.12?",
+          "choices": [
+            "27 m^3",
+            "64 m^3",
+            "125 m^3",
+            "216 m^3"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_24caf122",
+          "question_text": "What is the length of each edge of the cube in Figure 1.12?",
+          "choices": [
+            "3 m",
+            "4 m",
+            "5 m",
+            "6 m"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_6d99bb14",
+          "question_text": "What is the cube root of 12,167 x 42,875?",
+          "choices": [
+            "100",
+            "101",
+            "102",
+            "103"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_5102bb9d",
+          "question_text": "How many ways can a circle and a line be related?",
+          "choices": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_c491311c",
+          "question_text": "What is the sum of any 5 consecutive natural numbers divisible by?",
+          "choices": [
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_b7b34f4d",
+          "question_text": "One number is three times another, and four times the smaller added to five times the greater amounts to 133. What are the numbers?",
+          "choices": [
+            "21 and 7",
+            "22 and 11",
+            "23 and 15",
+            "24 and 19"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_c4fba8a2",
+          "question_text": "If a certain number is increased by 5, one-half of the result is three-fifths of the excess of 61 over the number. What is the number?",
+          "choices": [
+            "10",
+            "15",
+            "20",
+            "25"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_1eaf35ed",
+          "question_text": "Divide 54 into two parts so that four times the greater equals five times the less. What are the parts?",
+          "choices": [
+            "18 and 36",
+            "20 and 34",
+            "22 and 32",
+            "24 and 30"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_bfe99273",
+          "question_text": "What is the result of multiplying a monomial by a binomial?",
+          "choices": [
+            "A trinomial",
+            "A binomial",
+            "A monomial",
+            "A polynomial"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "tmpl_9f0188bcf3": {
+      "template_id": "tmpl_9f0188bcf3",
+      "topic": "the study material",
+      "grade_level": 8,
+      "subject": "Math",
+      "number_of_questions": 10,
+      "created_at": 1778430780,
+      "questions": [
+        {
+          "question_id": "q_4ad462a0",
+          "question_text": "Who funded the General Education Quality Improvement Project (GEQIP)?",
+          "choices": [
+            "The Federal Democratic Republic of Ethiopia",
+            "The International Development Associations (IDA)",
+            "The Fast Track Initiative Catalytic Fund (FTI CF) and other development partners",
+            "The Ministry of Education"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_7a539f1e",
+          "question_text": "What is the title of the most enduring mathematical work of all time written by Euclid?",
+          "choices": [
+            "The Elements of Geometry",
+            "The Father of Geometry",
+            "The Plane Geometry",
+            "The Elements"
+          ],
+          "correct_index": 3
+        },
+        {
+          "question_id": "q_c122629c",
+          "question_text": "What is the name of the project that aims to improve the quality of education for Grades 1-12 students in government schools throughout Ethiopia?",
+          "choices": [
+            "General Education Quality Improvement Project (GEQIP)",
+            "Fast Track Initiative Catalytic Fund (FTI CF)",
+            "International Development Associations (IDA)",
+            "Ministry of Education"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_4c2b84ee",
+          "question_text": "Who is known as the 'Father of Geometry'?",
+          "choices": [
+            "Basavaraju V.Mohan",
+            "Gebreyes Hailegeorgis",
+            "Euclid",
+            "Menberu Kebede"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_c329bab6",
+          "question_text": "What is the title of the unit that covers right angled triangles and trigonometric ratios?",
+          "choices": [
+            "UNIT eCCAiETCy AND MCASLECAiCNTS",
+            "UNIT FUCTtiEGON WCGriNeWITti VARIAELCS",
+            "Right Angled Triangles and Trigonometry",
+            "Geometry and Algebra"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_a23183c8",
+          "question_text": "What is the name of the book that covers plane geometry, arithmetic and number theory, irrational numbers, and solid geometry?",
+          "choices": [
+            "The Elements",
+            "The Father of Geometry",
+            "Plane Geometry",
+            "Algebra and Geometry"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_2e3696fa",
+          "question_text": "What is the name of the project that received funding for GEQIP through credit/financing from the International Development Associations (IDA), the Fast Track Initiative Catalytic Fund (FTI CF) and other development partners?",
+          "choices": [
+            "General Education Quality Improvement Project (GEQIP)",
+            "Federal Democratic Republic of Ethiopia",
+            "International Development Associations (IDA)",
+            "Ministry of Education"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_b82b24a7",
+          "question_text": "What is the title of the unit that covers variables and algebraic expressions?",
+          "choices": [
+            "UNIT FUCTtiEGON WCGriNeWITti VARIAELCS",
+            "UNIT eCCAiETCy AND MCASLECAiCNTS",
+            "Variables and Algebra",
+            "Geometry and Trigonometry"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_6295f7c5",
+          "question_text": "Who wrote the most enduring mathematical work of all time, the Elements?",
+          "choices": [
+            "Basavaraju V.Mohan",
+            "Gebreyes Hailegeorgis",
+            "Euclid",
+            "Menberu Kebede"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_514c03ee",
+          "question_text": "What is the name of the organization that provided funding for GEQIP through credit/financing?",
+          "choices": [
+            "International Development Associations (IDA)",
+            "Fast Track Initiative Catalytic Fund (FTI CF)",
+            "Ministry of Education",
+            "Federal Democratic Republic of Ethiopia"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "tmpl_7901859557": {
+      "template_id": "tmpl_7901859557",
+      "topic": "gtgtgtg",
+      "grade_level": 8,
+      "subject": "Math",
+      "number_of_questions": 10,
+      "created_at": 1778430797,
+      "questions": [
+        {
+          "question_id": "q_0f487508",
+          "question_text": "What is the value of x in Figure 7.90 if tanZ D = —.",
+          "choices": [
+            "5",
+            "13",
+            "20",
+            "30"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_42d5a965",
+          "question_text": "What is the value of x in Figure 7.91 if cos c = —.",
+          "choices": [
+            "5",
+            "13",
+            "20",
+            "30"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_832454f4",
+          "question_text": "What is the value of sin a in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.5",
+            "0.6",
+            "0.7",
+            "0.8"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_a1ee34f7",
+          "question_text": "What is the value of cos a in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.6",
+            "0.7",
+            "0.8",
+            "0.9"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_7e343cda",
+          "question_text": "What is the value of tan a in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.5",
+            "0.6",
+            "0.7",
+            "0.8"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_957eea9e",
+          "question_text": "What is the value of sin p in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.5",
+            "0.6",
+            "0.7",
+            "0.8"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_263d0c1e",
+          "question_text": "What is the value of cos p in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.6",
+            "0.7",
+            "0.8",
+            "0.9"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_78285404",
+          "question_text": "What is the value of tan p in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.5",
+            "0.6",
+            "0.7",
+            "0.8"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_e4f633b6",
+          "question_text": "What is the value of sin a sin β in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.5",
+            "0.6",
+            "0.7",
+            "0.8"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_249f4703",
+          "question_text": "What is the value of cos a cos β in Figure 7.92 if BC = 5 and AB = 13?",
+          "choices": [
+            "0.6",
+            "0.7",
+            "0.8",
+            "0.9"
+          ],
+          "correct_index": 2
+        }
+      ]
+    },
+    "tmpl_16fc5a797d": {
+      "template_id": "tmpl_16fc5a797d",
+      "topic": "the study material",
+      "grade_level": 8,
+      "subject": "Math",
+      "number_of_questions": 10,
+      "created_at": 1778431109,
+      "questions": [
+        {
+          "question_id": "q_22bf7dcf",
+          "question_text": "Who funded the General Education Quality Improvement Project (GEQIP)?",
+          "choices": [
+            "The Federal Democratic Republic of Ethiopia",
+            "The International Development Associations (IDA)",
+            "The Fast Track Initiative Catalytic Fund (FTI CF) and other development partners",
+            "The Ministry of Education"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_ad197576",
+          "question_text": "What is the title of the most enduring mathematical work of all time written by Euclid?",
+          "choices": [
+            "The Elements of Geometry",
+            "The Father of Geometry",
+            "The Plane Geometry",
+            "The Elements"
+          ],
+          "correct_index": 3
+        },
+        {
+          "question_id": "q_f6344a45",
+          "question_text": "What is the name of the project that aims to improve the quality of education for Grades 1-12 students in government schools throughout Ethiopia?",
+          "choices": [
+            "General Education Quality Improvement Project (GEQIP)",
+            "Fast Track Initiative Catalytic Fund (FTI CF)",
+            "International Development Associations (IDA)",
+            "Ministry of Education"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_77b7de6f",
+          "question_text": "Who is known as the 'Father of Geometry'?",
+          "choices": [
+            "Basavaraju V.Mohan",
+            "Gebreyes Hailegeorgis",
+            "Euclid",
+            "Menberu Kebede"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_5d64a3a5",
+          "question_text": "What is the title of the unit that covers right angled triangles and trigonometric ratios?",
+          "choices": [
+            "UNIT eCCAiETCy AND MCASLECAiCNTS",
+            "UNIT FUCTtiEGON WCGriNeWITti VARIAELCS",
+            "Right Angled Triangles and Trigonometry",
+            "Geometry and Algebra"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_6b1259c6",
+          "question_text": "What is the name of the book that covers plane geometry, arithmetic and number theory, irrational numbers, and solid geometry?",
+          "choices": [
+            "The Elements",
+            "The Father of Geometry",
+            "Plane Geometry",
+            "Algebra and Geometry"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_91fc3ea4",
+          "question_text": "What is the name of the project that received funding for GEQIP through credit/financing from the International Development Associations (IDA), the Fast Track Initiative Catalytic Fund (FTI CF) and other development partners?",
+          "choices": [
+            "General Education Quality Improvement Project (GEQIP)",
+            "Federal Democratic Republic of Ethiopia",
+            "International Development Associations (IDA)",
+            "Ministry of Education"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_2e75c97c",
+          "question_text": "What is the title of the unit that covers variables and algebraic expressions?",
+          "choices": [
+            "UNIT FUCTtiEGON WCGriNeWITti VARIAELCS",
+            "UNIT eCCAiETCy AND MCASLECAiCNTS",
+            "Variables and Algebra",
+            "Geometry and Trigonometry"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_c5d19a88",
+          "question_text": "Who wrote the most enduring mathematical work of all time, the Elements?",
+          "choices": [
+            "Basavaraju V.Mohan",
+            "Gebreyes Hailegeorgis",
+            "Euclid",
+            "Menberu Kebede"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_afac10ba",
+          "question_text": "What is the name of the organization that provided funding for GEQIP through credit/financing?",
+          "choices": [
+            "International Development Associations (IDA)",
+            "Fast Track Initiative Catalytic Fund (FTI CF)",
+            "Ministry of Education",
+            "Federal Democratic Republic of Ethiopia"
+          ],
+          "correct_index": 0
+        }
+      ]
+    },
+    "tmpl_387e3d8d5b": {
+      "template_id": "tmpl_387e3d8d5b",
+      "topic": "Math grade 8 units ",
+      "grade_level": 8,
+      "subject": "Math",
+      "number_of_questions": 10,
+      "created_at": 1778443287,
+      "questions": [
+        {
+          "question_id": "q_dccd52c8",
+          "question_text": "What is the result of 8 squared?",
+          "choices": [
+            "64",
+            "16",
+            "32",
+            "48"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_2b54ca54",
+          "question_text": "What is the meaning of 'a to the power of 2'?",
+          "choices": [
+            "a multiplied by 2",
+            "a squared",
+            "a to the power of 3",
+            "a to the power of 4"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_349fc44d",
+          "question_text": "What is the length of each edge of a cube with a volume of 64 m^3?",
+          "choices": [
+            "4 m",
+            "8 m",
+            "16 m",
+            "32 m"
+          ],
+          "correct_index": 1
+        },
+        {
+          "question_id": "q_06a4e50e",
+          "question_text": "What is the result of 10 squared?",
+          "choices": [
+            "100",
+            "50",
+            "20",
+            "10"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_6bf141e6",
+          "question_text": "What is the meaning of 'cube root'?",
+          "choices": [
+            "a number that is multiplied by itself three times",
+            "a number that is multiplied by itself twice",
+            "a number that is multiplied by itself four times",
+            "a number that is multiplied by itself five times"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_8d7556c2",
+          "question_text": "What is the result of 14 squared?",
+          "choices": [
+            "196",
+            "144",
+            "121",
+            "169"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_c064f26d",
+          "question_text": "What is the result of 19 squared?",
+          "choices": [
+            "361",
+            "400",
+            "441",
+            "484"
+          ],
+          "correct_index": 0
+        },
+        {
+          "question_id": "q_f2d5c918",
+          "question_text": "What is the meaning of 'power form'?",
+          "choices": [
+            "a number that is multiplied by itself",
+            "a number that is multiplied by another number",
+            "a number that is raised to a power",
+            "a number that is divided by another number"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_c137c995",
+          "question_text": "What is the result of 4.86 cubed?",
+          "choices": [
+            "123.47",
+            "124.47",
+            "125.47",
+            "126.47"
+          ],
+          "correct_index": 2
+        },
+        {
+          "question_id": "q_beac48cf",
+          "question_text": "What is the result of 12,167 x 42,875?",
+          "choices": [
+            "521,000,025",
+            "522,000,025",
+            "523,000,025",
+            "524,000,025"
+          ],
+          "correct_index": 0
+        }
+      ]
     }
   },
   "template_attempts": [
@@ -6553,6 +7727,398 @@
         },
         {
           "question_id": "q_698d61ff",
+          "selected_index": 0
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_d5e4408edd",
+      "template_id": "tmpl_1bee3e258c",
+      "score": 5,
+      "max_score": 10,
+      "created_at": 1778281014,
+      "answers": [
+        {
+          "question_id": "q_de89f249",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_2b61f5c7",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_24caf122",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_6d99bb14",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_5102bb9d",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_c491311c",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_b7b34f4d",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_c4fba8a2",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_1eaf35ed",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_bfe99273",
+          "selected_index": 0
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_4227836dd1",
+      "template_id": "tmpl_1bee3e258c",
+      "score": 1,
+      "max_score": 10,
+      "created_at": 1778418511,
+      "answers": [
+        {
+          "question_id": "q_de89f249",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_2b61f5c7",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_24caf122",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_6d99bb14",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_5102bb9d",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_c491311c",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_b7b34f4d",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_c4fba8a2",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_1eaf35ed",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_bfe99273",
+          "selected_index": 1
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_38392ce29a",
+      "template_id": "tmpl_7901859557",
+      "score": 2,
+      "max_score": 10,
+      "created_at": 1778430821,
+      "answers": [
+        {
+          "question_id": "q_0f487508",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_42d5a965",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_832454f4",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_a1ee34f7",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_7e343cda",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_957eea9e",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_78285404",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_263d0c1e",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_e4f633b6",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_249f4703",
+          "selected_index": 0
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_5758c2b748",
+      "template_id": "tmpl_7901859557",
+      "score": 1,
+      "max_score": 10,
+      "created_at": 1778430877,
+      "answers": [
+        {
+          "question_id": "q_0f487508",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_42d5a965",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_832454f4",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_a1ee34f7",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_7e343cda",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_957eea9e",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_263d0c1e",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_78285404",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_e4f633b6",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_249f4703",
+          "selected_index": 1
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_01e52206e8",
+      "template_id": "tmpl_16fc5a797d",
+      "score": 2,
+      "max_score": 10,
+      "created_at": 1778431146,
+      "answers": [
+        {
+          "question_id": "q_22bf7dcf",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_ad197576",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_f6344a45",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_77b7de6f",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_5d64a3a5",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_6b1259c6",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_91fc3ea4",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_2e75c97c",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_c5d19a88",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_afac10ba",
+          "selected_index": 1
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_374c0a2b15",
+      "template_id": "tmpl_387e3d8d5b",
+      "score": 3,
+      "max_score": 10,
+      "created_at": 1778443486,
+      "answers": [
+        {
+          "question_id": "q_beac48cf",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_c137c995",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_f2d5c918",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_c064f26d",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_8d7556c2",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_6bf141e6",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_06a4e50e",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_349fc44d",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_2b54ca54",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_dccd52c8",
+          "selected_index": 3
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_0b637b7c8c",
+      "template_id": "tmpl_387e3d8d5b",
+      "score": 4,
+      "max_score": 10,
+      "created_at": 1778444096,
+      "answers": [
+        {
+          "question_id": "q_dccd52c8",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_2b54ca54",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_349fc44d",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_06a4e50e",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_6bf141e6",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_8d7556c2",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_c064f26d",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_f2d5c918",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_c137c995",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_beac48cf",
+          "selected_index": 0
+        }
+      ]
+    },
+    {
+      "attempt_id": "tatt_c6d6f4e581",
+      "template_id": "tmpl_387e3d8d5b",
+      "score": 2,
+      "max_score": 10,
+      "created_at": 1778444425,
+      "answers": [
+        {
+          "question_id": "q_dccd52c8",
+          "selected_index": 1
+        },
+        {
+          "question_id": "q_2b54ca54",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_349fc44d",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_06a4e50e",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_6bf141e6",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_8d7556c2",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_c064f26d",
+          "selected_index": 2
+        },
+        {
+          "question_id": "q_f2d5c918",
+          "selected_index": 3
+        },
+        {
+          "question_id": "q_c137c995",
+          "selected_index": 0
+        },
+        {
+          "question_id": "q_beac48cf",
           "selected_index": 0
         }
       ]

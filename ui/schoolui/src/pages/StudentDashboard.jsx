@@ -1,234 +1,328 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ResponsiveContainer,
-  RadialBarChart,
-  RadialBar,
-  PolarAngleAxis,
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   XAxis,
-  YAxis,
   Tooltip,
   CartesianGrid,
 } from "recharts";
-import { getStudentDashboard, getStudentQuizAssignments } from "../api";
-import "./StudentDashboard.css";
-import { useNavigate } from "react-router-dom";
+import { motion as Motion } from "framer-motion";
+import {
+  BookOpen,
+  Brain,
+  CalendarDays,
+  GraduationCap,
+  Sparkles,
+  Trophy,
+  Clock3,
+  CircleCheckBig,
+} from "lucide-react";
 
+import { getStudentDashboard, getStudentQuizAssignments } from "../api";
+import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+
+import "./StudentDashboard.css";
 export default function StudentDashboard() {
+  const [params] = useSearchParams();
+  const studentId = Number(params.get("studentId")) || 1;
+
   const [data, setData] = useState(null);
+  const [quizAssignments, setQuizAssignments] = useState([]);
   const [err, setErr] = useState("");
+
   const navigate = useNavigate();
 
-  const [quizAssignments, setQuizAssignments] = useState([]);
-
   useEffect(() => {
-    getStudentDashboard(1)
+    getStudentDashboard(studentId)
       .then(setData)
       .catch((e) => setErr(String(e)));
-  }, []);
 
-  useEffect(() => {
-    getStudentQuizAssignments(1)
+    getStudentQuizAssignments(studentId)
       .then(setQuizAssignments)
       .catch((e) => console.log(e));
-  }, []);
+  }, [studentId]);
 
-  // hooks must remain above without early return
-  const history = useMemo(() => data?.history ?? [], [data?.history]);
-
-  const trend = useMemo(() => {
-    if (history.length < 2) return 0;
-    const first = history[0]?.examScore ?? 0;
-    const last = history[history.length - 1]?.examScore ?? 0;
-    return last - first; // Exam improvement/decline
-  }, [history]);
+  const history = useMemo(() => data?.history ?? [], [data]);
 
   const latest = useMemo(() => {
-    // Last value (if in history) otherwise from metrics
     const last = history[history.length - 1];
+
     return {
-      attendance: last?.attendance ?? data?.metrics?.attendance ?? 0,
+      attendance: last?.attendance ?? data?.metrics?.attendancePercentage ?? 0,
       examScore: last?.examScore ?? data?.metrics?.examScore ?? 0,
       studyHours: data?.metrics?.studyHours ?? 0,
-      stressLevel: data?.metrics?.stressLevel ?? 0,
     };
   }, [data, history]);
 
-  const bars = useMemo(() => {
-    // only display the last 4 months
-    return history.slice(-4).map((x) => ({
-      date: x.date,
-      examScore: x.examScore ?? 0,
+  const performanceData = useMemo(() => {
+    return history.map((x) => ({
+      month: x.date,
+      score: x.examScore,
     }));
   }, [history]);
 
   if (err) {
-    return (
-      <div className="sd-page">
-        <div className="sd-wrap">Error: {err}</div>
-      </div>
-    );
+    return <div className="sd-page">{err}</div>;
   }
 
   if (!data) {
-    return (
-      <div className="sd-page">
-        <div className="sd-wrap">Loading...</div>
-      </div>
-    );
+    return <div className="sd-loading">Loading Dashboard...</div>;
   }
 
-  // Circuit data
-  const attendancePct = clamp(latest.attendance, 0, 100);
-  const examPct = clamp(latest.examScore, 0, 100);
-
-  // “Progress” as a percentage: If trend +10, it means approximately 10% (but display friendly)
-  const progressPct = clamp(50 + trend, 0, 100);
   return (
     <div className="sd-page">
-      {/* Topbar */}
-      <div className="sd-topbar">
-        <div className="sd-brand">
-          <div className="sd-logo">🎓</div>
+      {/* Navbar */}
+      <div className="sd-navbar">
+        <div className="sd-navbar-left">
+          <div className="sd-logo">
+            <GraduationCap size={22} />
+          </div>
+
           <div>
-            <h1>School AI</h1>
-            <p>Student Dashboard</p>
+            <h2>DerasaX</h2>
+            <p>AI Learning Platform</p>
           </div>
         </div>
 
-        <div className="sd-actions">
-          <div className="sd-pill">Student ID: {data.studentId}</div>
-          <div className="sd-pill">Cluster: {data.cluster?.label}</div>
+        <div className="sd-navbar-right">
+          <div className="sd-level">
+            <Sparkles size={16} />
+            {data.prediction?.level}
+          </div>
         </div>
       </div>
 
-      {quizAssignments.length > 0 && (
-        <div className="sd-alert">
-          🔔 You have {quizAssignments.length} quiz
-          {quizAssignments.length > 1 ? "es" : ""} to complete
-          <button
-            onClick={() => {
-              navigate(
-                `/student-quiz/${quizAssignments[0].studentQuizAssignmentId}`,
-              );
-            }}
-          >
-            Start Quiz
-          </button>
-        </div>
-      )}
-
-      <div className="sd-wrap">
-        {/* KPIs */}
-        <div className="sd-kpis">
-          <Kpi title="Attendance" value={`${attendancePct}%`} />
-          <Kpi title="Exam Score" value={latest.examScore} />
-          <Kpi title="Study Hours" value={latest.studyHours} />
-          <Kpi title="Stress" value={latest.stressLevel} />
-        </div>
-
-        {/* 2 columns */}
-        <div className="sd-grid2">
-          {/* Left big */}
-          <div className="sd-main">
-            <div className="sd-card">
-              <div className="sd-card-h">Your Performance</div>
-              <div className="sd-card-b">
-                <div className="sd-radials">
-                  <Radial
-                    title="Attendance"
-                    value={attendancePct}
-                    color="#10b981"
-                    track="#e7f7ef"
-                  />
-                  <Radial
-                    title="Exam"
-                    value={examPct}
-                    color="#4f46e5"
-                    track="#e9eafc"
-                  />
-                  <Radial
-                    title="Progress"
-                    value={progressPct}
-                    sub={trend >= 0 ? `+${trend}` : `${trend}`}
-                    color="#f59e0b"
-                    track="#fff3db"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="sd-card">
-              <div className="sd-card-h">Exam in Last Months</div>
-              <div className="sd-card-b">
-                <div className="sd-chartBox">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={bars}>
-                      <defs>
-                        <linearGradient
-                          id="examGrad"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop offset="0%" stopColor="#6d28d9" />
-                          <stop offset="100%" stopColor="#4f46e5" />
-                        </linearGradient>
-                      </defs>
-
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis domain={[0, 100]} />
-                      <Tooltip />
-                      <Bar
-                        dataKey="examScore"
-                        fill="url(#examGrad)"
-                        radius={[10, 10, 0, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
+      <div className="sd-container">
+        {/* Hero */}
+        <Motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="sd-hero"
+        >
+          <div>
+            <h1>Welcome back, {data.studentName}</h1>
+            <p>Here’s your personalized AI-powered learning journey today.</p>
           </div>
 
-          {/* Right side */}
-          <div className="sd-side">
-            <div className="sd-card">
-              <div className="sd-card-h">Quick Summary</div>
-              <div className="sd-card-b">
-                <div className="sd-badge">
-                  Cluster: {data.cluster?.label} (ID: {data.cluster?.id})
+          <div className="sd-ai-badge">
+            <Brain size={18} />
+            AI Personalized Learning
+          </div>
+        </Motion.div>
+
+        {/* AI Recommendation */}
+        <Motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="sd-ai-card"
+        >
+          <div className="sd-ai-content">
+            <div>
+              <div className="sd-ai-title">
+                <Sparkles size={18} />
+                AI Recommended For You
+              </div>
+
+              <h2>Introduction to Calculus</h2>
+
+              <p>
+                Based on your recent performance and quiz analysis, AI detected
+                that you need more practice in calculus fundamentals.
+              </p>
+
+              <div className="sd-ai-progress-wrap">
+                <div className="sd-progress-label">
+                  <span>Progress</span>
+                  <span>55%</span>
                 </div>
 
-                <div className="sd-tip">
-                  <div className="sd-tipTitle">Tip</div>
-                  <div className="sd-tipText">
-                    {attendancePct < 85
-                      ? "Try to raise your attendance above 85%."
-                      : "Great! Keep your attendance above 85%."}
+                <div className="sd-progress-bar">
+                  <div className="sd-progress-fill" />
+                </div>
+              </div>
+            </div>
+
+            <button className="sd-primary-btn">Continue Learning</button>
+          </div>
+        </Motion.div>
+
+        {/* Stats */}
+        <div className="sd-stats-grid">
+          <StatCard
+            icon={<CircleCheckBig size={18} />}
+            title="Attendance"
+            value={`${latest.attendance}%`}
+          />
+
+          <StatCard
+            icon={<Trophy size={18} />}
+            title="Exam Score"
+            value={latest.examScore}
+          />
+
+          <StatCard
+            icon={<Clock3 size={18} />}
+            title="Study Hours"
+            value={latest.studyHours}
+          />
+
+          <StatCard
+            icon={<Brain size={18} />}
+            title="AI Prediction"
+            value={data.prediction?.predictedScore}
+          />
+        </div>
+
+        {/* Main Layout */}
+        <div className="sd-main-grid">
+          {/* Left */}
+          <div className="sd-left">
+            {/* Analytics */}
+            <div className="sd-card">
+              <div className="sd-card-header">
+                <div>
+                  <h3>Performance Analytics</h3>
+                  <p>Your exam performance in recent months</p>
+                </div>
+              </div>
+
+              <div className="sd-chart-wrap">
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={performanceData}>
+                    <defs>
+                      <linearGradient
+                        id="colorScore"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#0f9ba8"
+                          stopOpacity={0.4}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#0f9ba8"
+                          stopOpacity={0}
+                        />
+                      </linearGradient>
+                    </defs>
+
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+
+                    <XAxis dataKey="month" />
+
+                    <Tooltip />
+
+                    <Area
+                      type="monotone"
+                      dataKey="score"
+                      stroke="#0f9ba8"
+                      fillOpacity={1}
+                      fill="url(#colorScore)"
+                      strokeWidth={3}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Assigned Quizzes */}
+            <div className="sd-card">
+              <div className="sd-card-header">
+                <div>
+                  <h3>Assigned Quizzes</h3>
+                  <p>Complete your pending quizzes</p>
+                </div>
+              </div>
+
+              <div className="sd-quiz-grid">
+                {quizAssignments.map((quiz) => (
+                  <div
+                    key={quiz.studentQuizAssignmentId}
+                    className="sd-quiz-card"
+                  >
+                    <div className="sd-quiz-top">
+                      <div className="sd-quiz-icon">
+                        <BookOpen size={18} />
+                      </div>
+
+                      <span className="sd-quiz-status">Pending</span>
+                    </div>
+
+                    <h4>{quiz.topic || "AI Quiz"}</h4>
+
+                    <p>
+                      Personalized quiz generated based on your recent learning
+                      behavior.
+                    </p>
+
+                    <div className="sd-quiz-footer">
+                      <div>
+                        <CalendarDays size={14} />
+                        20 Questions
+                      </div>
+                      <button
+                        onClick={() =>
+                          navigate(
+                            `/student-quiz/${quiz.studentQuizAssignmentId}?studentId=${studentId}`,
+                          )
+                        }
+                      >
+                        Start Quiz
+                      </button>
+                    </div>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
-                <div className="sd-tip">
-                  <div className="sd-tipTitle">Next Goal</div>
-                  <div className="sd-tipText">
-                    Increase Exam Score by +5 next month.
-                  </div>
+          {/* Right */}
+          <div className="sd-right">
+            {/* AI Insights */}
+            <div className="sd-card">
+              <div className="sd-card-header">
+                <div>
+                  <h3>AI Insights</h3>
+                  <p>Generated from your behavior analysis</p>
                 </div>
+              </div>
+
+              <div className="sd-insights-list">
+                {data?.prediction?.insights?.map((i, idx) => (
+                  <Insight key={idx} title={i.title} text={i.text} />
+                ))}
               </div>
             </div>
 
+            {/* Learning Streak */}
             <div className="sd-card">
-              <div className="sd-card-h">Recommendations</div>
-              <div className="sd-card-b">
-                <ul className="sd-list">
-                  <li>Study 30–45 minutes daily.</li>
-                  <li>Review weak topics twice a week.</li>
-                  <li>Take short breaks to reduce stress.</li>
-                </ul>
+              <div className="sd-card-header">
+                <div>
+                  <h3>Learning Progress</h3>
+                  <p>Your weekly learning activity</p>
+                </div>
+              </div>
+
+              <div className="sd-streak-box">
+                <div className="sd-streak-number">5</div>
+                <div className="sd-streak-text">Days in a row</div>
+
+                <div className="sd-week-row">
+                  <div className="active">S</div>
+                  <div className="active">M</div>
+                  <div className="active">T</div>
+                  <div className="active">W</div>
+                  <div>T</div>
+                  <div>F</div>
+                  <div>S</div>
+                </div>
               </div>
             </div>
           </div>
@@ -238,59 +332,28 @@ export default function StudentDashboard() {
   );
 }
 
-function Kpi({ title, value }) {
+function StatCard({ icon, title, value }) {
   return (
-    <div className="sd-kpi">
-      <div className="label">{title}</div>
-      <div className="value">{value}</div>
-    </div>
+    <Motion.div whileHover={{ y: -4 }} className="sd-stat-card">
+      <div className="sd-stat-icon">{icon}</div>
+
+      <div>
+        <div className="sd-stat-title">{title}</div>
+        <div className="sd-stat-value">{value}</div>
+      </div>
+    </Motion.div>
   );
 }
 
-function Radial({ title, value, sub, color = "#6d28d9", track = "#e9eaf6" }) {
-  const data = [{ name: title, value }];
-
+function Insight({ title, text }) {
   return (
-    <div className="sd-radialCard">
-      <div className="sd-rTitle">{title}</div>
+    <div className="sd-insight-item">
+      <div className="sd-insight-dot" />
 
-      <div className="sd-rChart">
-        <ResponsiveContainer width="100%" height="100%">
-          <RadialBarChart
-            innerRadius="72%"
-            outerRadius="100%"
-            data={data}
-            startAngle={90}
-            endAngle={-270}
-          >
-            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-
-            {/* Background/Empty area */}
-            <RadialBar
-              dataKey="value"
-              fill={track}
-              background={{ fill: track }}
-            />
-
-            {/* colored part */}
-            <RadialBar
-              dataKey="value"
-              fill={color}
-              cornerRadius={999}
-              background={{ fill: track }}
-            />
-          </RadialBarChart>
-        </ResponsiveContainer>
-
-        <div className="sd-rCenter">
-          <div className="sd-rValue">{value}%</div>
-          {sub ? <div className="sd-rSub">{sub}</div> : null}
-        </div>
+      <div>
+        <h4>{title}</h4>
+        <p>{text}</p>
       </div>
     </div>
   );
-}
-
-function clamp(x, a, b) {
-  return Math.max(a, Math.min(b, Number(x) || 0));
 }

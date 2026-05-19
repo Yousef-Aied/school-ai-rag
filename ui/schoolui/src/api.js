@@ -18,7 +18,7 @@ export async function sendMessage({conversationId, message, grade, subject, stud
   return await res.json(); // { answer }
 }
 
-// Analysis API
+// Analysis API 
 export async function analyzeChat(studentId, conversationId, messages, grade, subject) {
   const res = await fetch("http://localhost:8000/api/analyze-chat", {
     method: "POST",
@@ -41,7 +41,7 @@ export async function analyzeChat(studentId, conversationId, messages, grade, su
 }
 
 
-// Quiz API
+// Quiz API payload
 export async function generateQuiz({ studentId, conversationId, nQuestions = 10, topic, grade, subject }) {
   const res = await fetch("http://localhost:8000/api/quiz/generate", {
     method: "POST",
@@ -83,18 +83,7 @@ export async function getQuiz(quizId) {
 }
 
 
-// Behavior Prediction API
-// Behavior (KMeans) API
-export async function predictBehaviorCluster(payload) {
-  const res = await fetch("http://localhost:8000/api/behavior/predict", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
 
-  if (!res.ok) throw new Error(await res.text());
-  return await res.json(); // { cluster, label }
-}
 
 
 // ===============================

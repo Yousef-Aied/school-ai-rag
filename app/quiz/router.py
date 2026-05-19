@@ -3,11 +3,17 @@ import uuid
 from fastapi import APIRouter, HTTPException
 from typing import Any, Dict, List
 from app.quiz.schemas import (
-    GenerateQuizRequest, GenerateQuizResponse, QuizQuestionPublic,
-    SubmitQuizRequest, SubmitQuizResponse, ReviewItem,
-    QuizTemplateGenerateRequest, QuizTemplateGenerateResponse,
-    QuizTemplateQuestionPublic, QuizTemplateSubmitRequest,
-    QuizTemplateSubmitResponse
+    GenerateQuizRequest,
+    GenerateQuizResponse,
+    QuizQuestionPublic,
+    SubmitQuizRequest,
+    SubmitQuizResponse,
+    ReviewItem,
+    QuizTemplateGenerateRequest,
+    QuizTemplateGenerateResponse,
+    QuizTemplateQuestionPublic,
+    QuizTemplateSubmitRequest,
+    QuizTemplateSubmitResponse,
 )
 from app.quiz.store import load_store, save_store
 from app.rag.indexer import build_or_load_vectorstore
@@ -23,27 +29,55 @@ VECTORSTORE_DIR = BASE_DIR / "vectorstore"
 
 _vectorstore = None
 
+
 def get_vectorstore():
     global _vectorstore
     if _vectorstore is None:
         if not VECTORSTORE_DIR.exists():
             raise RuntimeError("vectorstore folder not found. Build index first.")
-        _vectorstore = build_or_load_vectorstore(chunks=None, persist_dir=str(VECTORSTORE_DIR))
+        _vectorstore = build_or_load_vectorstore(
+            chunks=None, persist_dir=str(VECTORSTORE_DIR)
+        )
     return _vectorstore
+
 
 def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any]]:
     import json
 
     instruction = (
-        f"Create EXACTLY {n} multiple-choice questions from the context.\n"
+        f"Create EXACTLY {n} multiple-choice questions STRICTLY from the provided context.\n"
+        "IMPORTANT RULES:\n"
+        "- Use ONLY the provided context.\n"
+        "- Do NOT use external knowledge.\n"
+        "- Do NOT repeat the same question type.\n"
+        "- Questions must be suitable for the student's grade level.\n"
+        "- Questions must vary in difficulty (easy, medium, hard).\n"
+        "- Include conceptual questions, not just calculations.\n"
+        "- Avoid trivial repetition (like many square calculations).\n"
+        "- Focus on understanding, not memorization.\n"
+        "Question types MUST include a mix of:\n"
+        "1. Concept understanding\n"
+        "2. Application problems\n"
+        "3. Word problems\n"
+        "4. Calculation (limited)\n\n"
         "Return STRICT JSON only.\n"
-        "Output must be a JSON array of length exactly n.\n"
-        "Each item MUST have:\n"
-        '- "question_text": string\n'
-        '- "choices": array of 4 strings\n'
-        '- "correct_index": integer 0-3\n'
-        "Do not include any other keys.\n"
     )
+
+    # instruction = (
+    #     f"Create EXACTLY {n} multiple-choice questions STRICTLY from the provided context.\n"
+    #     "IMPORTANT RULES:\n"
+    #     "- Do NOT use any external knowledge.\n"
+    #     "- Do NOT invent questions.\n"
+    #     "- Use ONLY the provided context.\n"
+    #     "- If the context is insufficient, generate simpler questions from it.\n"
+    #     "- Questions must be directly based on the textbook content.\n\n"
+    #     "Return STRICT JSON only.\n"
+    #     "Output must be a JSON array of length exactly n.\n"
+    #     "Each item MUST have:\n"
+    #     '- "question_text": string\n'
+    #     '- "choices": array of 4 strings\n'
+    #     '- "correct_index": integer 0-3\n'
+    # )
 
     def try_parse(raw: str):
         s = raw.strip()
@@ -58,7 +92,11 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
         for item in data:
             if not isinstance(item, dict):
                 raise ValueError("Each item must be an object")
-            if "question_text" not in item or "choices" not in item or "correct_index" not in item:
+            if (
+                "question_text" not in item
+                or "choices" not in item
+                or "correct_index" not in item
+            ):
                 raise ValueError("Missing keys")
             if not isinstance(item["choices"], list) or len(item["choices"]) != 4:
                 raise ValueError("choices must be array of 4")
@@ -76,8 +114,7 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
         raw2 = ask_groq_json(
             instruction
             + "\nIMPORTANT: Return ONLY JSON. Start with '[' and end with ']'. "
-            "No text before or after.\n"
-            + f"Topic: {question}",
+            "No text before or after.\n" + f"Topic: {question}",
             context,
         )
         try:
@@ -95,14 +132,14 @@ def generate_quiz(payload: GenerateQuizRequest):
 
     topic = payload.topic or "the study material"
     # retrieve context from RAG: either from topic or from "last topic"
-    context = retrieve_context(vs, topic, k=6)
+    context = retrieve_context(vs, topic, k=12)
 
     items = generate_mcq_json(topic, context, payload.n_questions)
 
     quiz_id = f"qz_{uuid.uuid4().hex[:10]}"
     store = load_store()
 
-    # store internally with correct_index (not for the front end).
+    # store internally with correct_index (not for the front end). topic
     questions_internal = []
     questions_public = []
 
@@ -113,20 +150,22 @@ def generate_quiz(payload: GenerateQuizRequest):
         correct = int(it.get("correct_index", 0))
 
         if not q_text or not isinstance(choices, list) or len(choices) != 4:
-            raise HTTPException(status_code=500, detail="Invalid question format from LLM")
+            raise HTTPException(
+                status_code=500, detail="Invalid question format from LLM"
+            )
 
-        questions_internal.append({
-            "question_id": qid,
-            "question_text": q_text,
-            "choices": choices,
-            "correct_index": correct,
-        })
+        questions_internal.append(
+            {
+                "question_id": qid,
+                "question_text": q_text,
+                "choices": choices,
+                "correct_index": correct,
+            }
+        )
 
-        questions_public.append(QuizQuestionPublic(
-            question_id=qid,
-            question_text=q_text,
-            choices=choices
-        ))
+        questions_public.append(
+            QuizQuestionPublic(question_id=qid, question_text=q_text, choices=choices)
+        )
 
     store["quizzes"][quiz_id] = {
         "quiz_id": quiz_id,
@@ -134,7 +173,7 @@ def generate_quiz(payload: GenerateQuizRequest):
         "conversation_id": payload.conversation_id,
         "created_at": int(time.time()),
         "topic": topic,
-        "questions": questions_internal
+        "questions": questions_internal,
     }
     save_store(store)
 
@@ -142,8 +181,9 @@ def generate_quiz(payload: GenerateQuizRequest):
         quiz_id=quiz_id,
         student_id=payload.student_id,
         conversation_id=payload.conversation_id,
-        questions=questions_public
+        questions=questions_public,
     )
+
 
 @router.post("/submit", response_model=SubmitQuizResponse)
 def submit_quiz(payload: SubmitQuizRequest):
@@ -153,7 +193,9 @@ def submit_quiz(payload: SubmitQuizRequest):
         raise HTTPException(status_code=404, detail="Quiz not found")
 
     if quiz["student_id"] != payload.student_id:
-        raise HTTPException(status_code=403, detail="This quiz does not belong to this student")
+        raise HTTPException(
+            status_code=403, detail="This quiz does not belong to this student"
+        )
 
     questions = quiz["questions"]
     qmap = {q["question_id"]: q for q in questions}
@@ -167,14 +209,16 @@ def submit_quiz(payload: SubmitQuizRequest):
         if not q:
             continue
         answered += 1
-        is_correct = (ans.selected_index == q["correct_index"])
+        is_correct = ans.selected_index == q["correct_index"]
         if is_correct:
             score += 1
-        review.append(ReviewItem(
-            question_id=ans.question_id,
-            is_correct=is_correct,
-            correct_index=q["correct_index"]
-        ))
+        review.append(
+            ReviewItem(
+                question_id=ans.question_id,
+                is_correct=is_correct,
+                correct_index=q["correct_index"],
+            )
+        )
 
     max_score = len(questions)
     completion_rate = (answered / max_score) if max_score else 0.0
@@ -199,8 +243,9 @@ def submit_quiz(payload: SubmitQuizRequest):
         score=score,
         max_score=max_score,
         completion_rate=completion_rate,
-        review=review
+        review=review,
     )
+
 
 @router.get("/{quiz_id}")
 def get_quiz(quiz_id: str):
@@ -225,21 +270,19 @@ def get_quiz(quiz_id: str):
         "conversation_id": quiz.get("conversation_id"),
         "questions": questions_public,
     }
-    
+
+
 # ===============================
-# createTeacherQuizAssignment API   
+# createTeacherQuizAssignment API
 @router.post("/template/generate", response_model=QuizTemplateGenerateResponse)
 def generate_quiz_template(payload: QuizTemplateGenerateRequest):
     vs = get_vectorstore()
 
-    topic = payload.topic or "the study material"
+    units_text = " ".join(map(str, payload.units)) if payload.units else ""
+    topic = f"{payload.subject} grade {payload.grade_level} units {units_text}"
 
     context = retrieve_context(
-        vs,
-        topic,
-        k=6,
-        grade=payload.grade_level,
-        subject=payload.subject
+        vs, topic, k=12, grade=payload.grade_level, subject=payload.subject
     )
 
     # context = retrieve_context(vs, topic, k=6)
@@ -259,20 +302,24 @@ def generate_quiz_template(payload: QuizTemplateGenerateRequest):
         correct = int(it.get("correct_index", 0))
 
         if not q_text or not isinstance(choices, list) or len(choices) != 4:
-            raise HTTPException(status_code=500, detail="Invalid question format from LLM")
+            raise HTTPException(
+                status_code=500, detail="Invalid question format from LLM"
+            )
 
-        questions_internal.append({
-            "question_id": qid,
-            "question_text": q_text,
-            "choices": choices,
-            "correct_index": correct,
-        })
+        questions_internal.append(
+            {
+                "question_id": qid,
+                "question_text": q_text,
+                "choices": choices,
+                "correct_index": correct,
+            }
+        )
 
-        questions_public.append(QuizTemplateQuestionPublic(
-            question_id=qid,
-            question_text=q_text,
-            choices=choices
-        ))
+        questions_public.append(
+            QuizTemplateQuestionPublic(
+                question_id=qid, question_text=q_text, choices=choices
+            )
+        )
 
     store["templates"][template_id] = {
         "template_id": template_id,
@@ -281,14 +328,13 @@ def generate_quiz_template(payload: QuizTemplateGenerateRequest):
         "subject": payload.subject,
         "number_of_questions": payload.number_of_questions,
         "created_at": int(time.time()),
-        "questions": questions_internal
+        "questions": questions_internal,
     }
 
     save_store(store)
 
     return QuizTemplateGenerateResponse(
-        template_id=template_id,
-        questions=questions_public
+        template_id=template_id, questions=questions_public
     )
 
 
@@ -309,13 +355,12 @@ def get_quiz_template(template_id: str):
         for q in template["questions"]
     ]
 
-    return {
-        "template_id": template_id,
-        "questions": questions_public
-    }
+    return {"template_id": template_id, "questions": questions_public}
 
 
-@router.post("/template/{template_id}/submit", response_model=QuizTemplateSubmitResponse)
+@router.post(
+    "/template/{template_id}/submit", response_model=QuizTemplateSubmitResponse
+)
 def submit_quiz_template(template_id: str, payload: QuizTemplateSubmitRequest):
     store = load_store()
     template = store["templates"].get(template_id)
@@ -338,17 +383,16 @@ def submit_quiz_template(template_id: str, payload: QuizTemplateSubmitRequest):
 
     max_score = len(questions)
 
-    store["template_attempts"].append({
-        "attempt_id": f"tatt_{uuid.uuid4().hex[:10]}",
-        "template_id": template_id,
-        "score": score,
-        "max_score": max_score,
-        "created_at": int(time.time()),
-        "answers": [a.model_dump() for a in payload.answers]
-    })
+    store["template_attempts"].append(
+        {
+            "attempt_id": f"tatt_{uuid.uuid4().hex[:10]}",
+            "template_id": template_id,
+            "score": score,
+            "max_score": max_score,
+            "created_at": int(time.time()),
+            "answers": [a.model_dump() for a in payload.answers],
+        }
+    )
     save_store(store)
 
-    return QuizTemplateSubmitResponse(
-        score=score,
-        max_score=max_score
-    )
+    return QuizTemplateSubmitResponse(score=score, max_score=max_score)

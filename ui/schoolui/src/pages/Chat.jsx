@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { sendMessage, generateQuiz, analyzeChat, getStudentDashboard } from "../api";
+import { useSearchParams } from "react-router-dom";
+
 import Sidebar from "../components/Sidebar";
 import ChatWindow from "../components/ChatWindow";
 import { useNavigate } from "react-router-dom";
 import "../Chat.css";
 
-const studentId = 1;
-// It has a chat room
-// App (Manages conversations + storage)
-// function uid() {
-//   return crypto.randomUUID();
-// }
+
+
 function uid() {
   return (
     crypto?.randomUUID?.() ??
@@ -42,6 +40,9 @@ function makeNewConversation() {
 
 // chat
 export default function Chat() {
+  const [params] = useSearchParams();
+  const studentId = Number(params.get("studentId")) || 1;
+
   const [studentName, setStudentName] = useState("");
   const [behaviorLabel, setBehaviorLabel] = useState("");
 
@@ -67,17 +68,17 @@ export default function Chat() {
 
 
   useEffect(() => {
-    getStudentDashboard(studentId)
-      .then((data) => {
-        if (data.studentName) {
-          setStudentName(data.studentName);
-        }
-        if (data.cluster && data.cluster.label) {
-          setBehaviorLabel(data.cluster.label);
-        }
-      })
-      .catch((err) => console.error("Failed to load dashboard data from .NET", err));
-  }, []);
+  getStudentDashboard(studentId)
+    .then((data) => {
+      if (data.studentName) {
+        setStudentName(data.studentName);
+      }
+      if (data.cluster && data.cluster.label) {
+        setBehaviorLabel(data.cluster.label);
+      }
+    })
+    .catch((err) => console.error("Failed to load dashboard data from .NET", err));
+}, [studentId]);
 
   // Because Chat page specific styles to (scrollbar)
   useEffect(() => {
