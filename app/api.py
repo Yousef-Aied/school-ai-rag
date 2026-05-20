@@ -82,7 +82,16 @@ def build_index_if_needed():
 #     global vectorstore
 #     vectorstore = build_index_if_needed()
 
-
+@app.on_event("startup")
+def on_startup():
+    global vectorstore
+    try:
+        vectorstore = build_index_if_needed()
+    except Exception as e:
+        print("Vectorstore init failed:", e)
+        vectorstore = None
+        
+        
 # -----------------------------
 # CHAT context 
 # -----------------------------
