@@ -49,6 +49,7 @@ def build_style_hint(profile: dict | None, student_name: str | None = None) -> s
 # -----------------------------
 # APP
 # -----------------------------
+
 app = FastAPI(title="School AI RAG API")
 
 app.add_middleware(
@@ -76,6 +77,9 @@ vectorstore = None
 #     chunks = split_docs(docs)
 #     return build_or_load_vectorstore(chunks=chunks, persist_dir=str(VECTORSTORE_DIR))
 
+@app.get("/")
+def root():
+    return {"status": "API is running"}
 
 # @app.on_event("startup")
 # def on_startup():

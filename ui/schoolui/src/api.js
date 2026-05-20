@@ -1,6 +1,7 @@
 // API wrapper (connects to BackIndex)
+// http://localhost:8000
 export async function sendMessage({conversationId, message, grade, subject, studentId = 1, studentName, behaviorLabel}) {
-  const res = await fetch("http://localhost:8000/api/chat", {
+  const res = await fetch("https://ai-service-pj5r.onrender.com/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -20,7 +21,7 @@ export async function sendMessage({conversationId, message, grade, subject, stud
 
 // Analysis API 
 export async function analyzeChat(studentId, conversationId, messages, grade, subject) {
-  const res = await fetch("http://localhost:8000/api/analyze-chat", {
+  const res = await fetch("https://ai-service-pj5r.onrender.com/api/analyze-chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -43,7 +44,7 @@ export async function analyzeChat(studentId, conversationId, messages, grade, su
 
 // Quiz API payload
 export async function generateQuiz({ studentId, conversationId, nQuestions = 10, topic, grade, subject }) {
-  const res = await fetch("http://localhost:8000/api/quiz/generate", {
+  const res = await fetch("https://ai-service-pj5r.onrender.com/api/quiz/generate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -61,7 +62,7 @@ export async function generateQuiz({ studentId, conversationId, nQuestions = 10,
 }
 
 export async function submitQuiz({ quizId, studentId, answers }) {
-  const res = await fetch("http://localhost:8000/api/quiz/submit", {
+  const res = await fetch("https://ai-service-pj5r.onrender.com/api/quiz/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -77,7 +78,7 @@ export async function submitQuiz({ quizId, studentId, answers }) {
 
 // Add fetch if state is not available
 export async function getQuiz(quizId) {
-  const res = await fetch(`http://localhost:8000/api/quiz/${quizId}`);
+  const res = await fetch(`https://ai-service-pj5r.onrender.com/api/quiz/${quizId}`);
   if (!res.ok) throw new Error(await res.text());
   return await res.json();
 }
