@@ -1,6 +1,6 @@
 // API wrapper (connects to BackIndex)
 // http://localhost:8000
-export async function sendMessage({conversationId, message, grade, subject, studentId = 1, studentName, behaviorLabel}) {
+export async function sendMessage({conversationId, message, grade, subject, studentId = 1, studentName}) {
   const res = await fetch("https://ai-service-pj5r.onrender.com/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -9,7 +9,6 @@ export async function sendMessage({conversationId, message, grade, subject, stud
       message,
       student_id: studentId, //send it so that it knows the backend and which profile to open
       student_name: studentName,
-      behavior_label: behaviorLabel,
       grade,
       subject,
     }),
@@ -90,7 +89,9 @@ export async function getQuiz(quizId) {
 // ===============================
 // .NET API (Teacher Dashboard)
 // ===============================
-const DOTNET_BASE = "https://localhost:7265"; // .NET Swagger
+// const DOTNET_BASE = "https://localhost:7265"; // .NET Swagger
+
+const DOTNET_BASE = "https://school-ai-backend-2qd1.onrender.com"; //.NET  Render
 
 // Teacher Dashboard API
 export async function getTeacherDashboard(teacherId) {
