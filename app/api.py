@@ -144,7 +144,7 @@ class ChatResponse(BaseModel):
 def chat(req: ChatRequest):
     global vectorstore
 
-    #build if it's not there
+    #build if it's not there Medium
     if vectorstore is None:
         print("Auto-building vectorstore...")
         vectorstore = build_index_if_needed()
@@ -172,13 +172,16 @@ def chat(req: ChatRequest):
         try: 
             BASE_API = os.getenv("BACKEND_URL", "https://school-ai-backend-2qd1.onrender.com")
             res = requests.get(
-                f"{BASE_API}/api/student/prediction?studentId={req.student_id}"
-            )
+                f"{BASE_API}/api/student/prediction?studentId={req.student_id}",
+                timeout=5
+            )   
 
             if res.status_code == 200:
                 data = res.json()
                 student_level = data.get("level", "Medium")
                 student_score = data.get("predictedScore", 70)
+            else:
+                print("Prediction API failed:", res.status_code)
 
         except Exception as e:
             print("Prediction fetch error:", e)
