@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from pathlib import Path
 from typing import Optional
 
-# RAG + LLM
+# RAG + LLM BASE_API
 from app.rag.loader import load_pdfs
 from app.rag.splitter import split_docs
 from app.rag.indexer import build_or_load_vectorstore

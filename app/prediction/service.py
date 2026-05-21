@@ -22,15 +22,23 @@ MODEL_DIR = BASE_DIR / "models"
 # DOWNLOAD
 # -----------------------------------
 def download_file(url, path):
-    if not path.exists():
-        print(f"Downloading {path.name}...")
-        r = requests.get(url)
-        with open(path, "wb") as f:
-            f.write(r.content)
+    if path.exists():
+        return  # already downloaded
 
+    print(f"Downloading {path.name}...")
+
+    r = requests.get(url, stream=True, timeout=60)
+
+    if r.status_code == 200:
+        with open(path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+    else:
+        print("Download failed:", r.status_code)
 
 # -----------------------------------
-# LOAD MODELS (FIXED)
+# LOAD MODELS (FIXED) 
 # -----------------------------------
 def load_models():
     global reg_model, cls_model
@@ -41,22 +49,16 @@ def load_models():
     try:
         print("Loading models...")
 
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        MODEL_DIR = BASE_DIR / "models"
         MODEL_DIR.mkdir(exist_ok=True)
 
         reg_path = MODEL_DIR / "rf_regressor.pkl"
         cls_path = MODEL_DIR / "rf_classifier.pkl"
 
-        # Download from Drive
-        download_file(
-            "https://drive.google.com/uc?id=1wDRvOx38u-LgUSVciw2zIfc6H_7eI8uE",
-            reg_path,
-        )
-        download_file(
-            "https://drive.google.com/uc?id=1KFI1kwucXklm-TWDaphLDRu9xohWJT2u",
-            cls_path,
-        )
+        download_file("https://drive.google.com/uc?id=1wDRvOx38u-LgUSVciw2zIfc6H_7eI8uE", reg_path)
+        download_file("https://drive.google.com/uc?id=1KFI1kwucXklm-TWDaphLDRu9xohWJT2u", cls_path)
 
-        # Load
         reg_model = joblib.load(reg_path)
         cls_model = joblib.load(cls_path)
 
@@ -66,7 +68,6 @@ def load_models():
         print("Failed loading models:", e)
         reg_model = None
         cls_model = None
-
 
 # -----------------------------------
 # PREPROCESS
