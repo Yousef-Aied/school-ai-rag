@@ -6,10 +6,10 @@ from pathlib import Path
 from typing import Optional
 
 # RAG + LLM
-# from app.rag.loader import load_pdfs
-# from app.rag.splitter import split_docs
-# from app.rag.indexer import build_or_load_vectorstore
-# from app.rag.retriever import retrieve_context
+from app.rag.loader import load_pdfs
+from app.rag.splitter import split_docs
+from app.rag.indexer import build_or_load_vectorstore
+from app.rag.retriever import retrieve_context
 from app.llm.groq_client import ask_groq
 
 # Routers
@@ -65,7 +65,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://school-ai-frontend.vercel.app"
+        "https://school-ai-frontend.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -79,37 +79,56 @@ VECTORSTORE_DIR = BASE_DIR / "vectorstore"
 vectorstore = None
 
 
-# def build_index_if_needed():
-#     VECTORSTORE_DIR.mkdir(parents=True, exist_ok=True)
+def build_index_if_needed():
+    try:
+        VECTORSTORE_DIR.mkdir(parents=True, exist_ok=True)
 
-#     if any(VECTORSTORE_DIR.iterdir()):
-#         return build_or_load_vectorstore(chunks=None, persist_dir=str(VECTORSTORE_DIR))
+        # If there is an existing index
+        if any(VECTORSTORE_DIR.iterdir()):
+            return build_or_load_vectorstore(
+                chunks=None, persist_dir=str(VECTORSTORE_DIR)
+            )
 
-#     docs = load_pdfs(str(PDF_DIR))
-#     chunks = split_docs(docs)
-#     return build_or_load_vectorstore(chunks=chunks, persist_dir=str(VECTORSTORE_DIR))
+        # If there are no PDFs → don't build
+        if not PDF_DIR.exists() or not any(PDF_DIR.iterdir()):
+            print("No PDFs found → skipping RAG")
+            return None
+
+        docs = load_pdfs(str(PDF_DIR))
+        chunks = split_docs(docs)
+
+        return build_or_load_vectorstore(
+            chunks=chunks, persist_dir=str(VECTORSTORE_DIR)
+        )
+
+    except Exception as e:
+        print("RAG build failed:", e)
+        return None
+
 
 @app.get("/")
 def root():
     return {"status": "API is running"}
+
 
 # @app.on_event("startup")
 # def on_startup():
 #     global vectorstore
 #     vectorstore = build_index_if_needed()
 
-# @app.on_event("startup")
-# def on_startup():
-#     global vectorstore
-#     try:
-#         vectorstore = build_index_if_needed()
-#     except Exception as e:
-#         print("Vectorstore init failed:", e)
-#         vectorstore = None
-        
-        
+
+@app.on_event("startup")
+def on_startup():
+    global vectorstore
+    try:
+        vectorstore = build_index_if_needed()
+    except Exception as e:
+        print("Vectorstore init failed:", e)
+        vectorstore = None
+
+
 # -----------------------------
-# CHAT context 
+# CHAT context
 # -----------------------------
 class ChatRequest(BaseModel):
     conversation_id: str
@@ -124,7 +143,7 @@ class ChatResponse(BaseModel):
     answer: str
 
 
-# Weak → Simple explanation 
+# Weak → Simple explanation
 # Medium → Step-by-step
 # Strong → Advanced + deeper
 @app.post("/api/chat", response_model=ChatResponse)
@@ -132,8 +151,12 @@ def chat(req: ChatRequest):
     # context = retrieve_context(
     #     vectorstore, query=req.message, k=4, grade=req.grade, subject=req.subject  #Top 4 Chunks
     # )
-    context = ""
-
+    if vectorstore:
+        context = retrieve_context(
+            vectorstore, query=req.message, k=4, grade=req.grade, subject=req.subject
+        )
+    else:
+        context = ""
 
     profile = get_profile(req.student_id) if req.student_id else None
 

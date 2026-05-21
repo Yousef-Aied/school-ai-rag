@@ -27,6 +27,14 @@ def infer_meta_from_path(path_str: str) -> Meta:
 
     # subject from filename math.pdf -> math
     meta["subject"] = p.stem.lower()
+    # name = p.stem.lower()
+
+    # if "math" in name:
+    #     meta["subject"] = "math"
+    # elif "physics" in name:
+    #     meta["subject"] = "physics"
+    # else:
+    #     meta["subject"] = name
 
     return meta
 
@@ -38,8 +46,11 @@ def load_pdfs(pdf_dir: str):
     # search within the row folders
     pdf_files = sorted(pdf_dir_path.rglob("*.pdf"))
     
+    # if not pdf_files:
+    #     raise FileNotFoundError(f"No PDF files found in: {pdf_dir_path}")
     if not pdf_files:
-        raise FileNotFoundError(f"No PDF files found in: {pdf_dir_path}")
+        print("No PDFs found")
+        return []
 
     docs = []
     for pdf_path in pdf_files:
@@ -66,40 +77,3 @@ def load_pdfs(pdf_dir: str):
     return docs
 
 
-
-
-# def infer_meta_from_path(path_str: str) -> Meta:
-#     #"data/grade_8/math_book.pdf"
-#     path_lower = path_str.lower()
-
-#     # Row map dictionary
-#     grades_map = {
-#         "grade_4": 4,
-#         "grade_5": 5,
-#         "grade_6": 6,
-#         "grade_7": 7,
-#         "grade_8": 8,
-#         "grade_9": 9,
-#         "grade_10": 10,
-#         "grade_11": 11,
-#         "grade_12": 12,
-#     }
-
-#     # Material map list
-#     subjects = ["math", "physics", "science", "english", "chemistry", "biology", "history"]
-
-#     meta: Meta = {"grade": None, "subject": None}
-
-#     # Searching for the class | Searching for the grade
-#     for key, val in grades_map.items():
-#         if key in path_lower:
-#             meta["grade"] = val
-#             break
-
-#     # Searching for the material
-#     for sub in subjects:
-#         if sub in path_lower:
-#             meta["subject"] = sub
-#             break
-
-#     return meta

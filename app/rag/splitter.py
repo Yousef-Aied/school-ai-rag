@@ -51,16 +51,3 @@ def split_docs(docs, chunk_size=1000, chunk_overlap=150):
         chunk.metadata["id"] = f"{current_page_id}_c{current_chunk_index}"
 
     return chunks
-
-# It cuts long texts (from PDFs) into small, organized sections.cut it into chunks
-# def split_docs(docs, chunk_size=1000, chunk_overlap=150):
-#     splitter = RecursiveCharacterTextSplitter(
-#         chunk_size=chunk_size,
-#         chunk_overlap=chunk_overlap,
-#         separators=["\n\n", "\n", ".", "!", "?", " ", ""],
-#     )
-#     return splitter.split_documents(docs)
-
-
-# Combine the file name, page number, and item number to create a unique ID for each item.
-# This will be very helpful in the future if you want to update the data or prevent duplication
