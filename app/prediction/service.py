@@ -1,13 +1,37 @@
 import joblib
+import requests
 import pandas as pd
 from pathlib import Path
 from app.llm.groq_client import ask_groq
 from app.llm.groq_client import ask_groq_json
 
+# https://drive.google.com/file/d/1wDRvOx38u-LgUSVciw2zIfc6H_7eI8uE/view?usp=sharing
+# https://drive.google.com/file/d/1KFI1kwucXklm-TWDaphLDRu9xohWJT2u/view?usp=sharing
 
+# -----------------------------------
+# GLOBALS
+# -----------------------------------
 reg_model = None
 cls_model = None
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_DIR = BASE_DIR / "models"
+
+
+# -----------------------------------
+# DOWNLOAD
+# -----------------------------------
+def download_file(url, path):
+    if not path.exists():
+        print(f"Downloading {path.name}...")
+        r = requests.get(url)
+        with open(path, "wb") as f:
+            f.write(r.content)
+
+
+# -----------------------------------
+# LOAD MODELS (FIXED)
+# -----------------------------------
 def load_models():
     global reg_model, cls_model
 
@@ -17,21 +41,36 @@ def load_models():
     try:
         print("Loading models...")
 
-        BASE_DIR = Path(__file__).resolve().parent.parent
-        MODEL_DIR = BASE_DIR / "models"
+        MODEL_DIR.mkdir(exist_ok=True)
 
-        reg_model = joblib.load(MODEL_DIR / "rf_regressor.pkl")
-        cls_model = joblib.load(MODEL_DIR / "rf_classifier.pkl")
+        reg_path = MODEL_DIR / "rf_regressor.pkl"
+        cls_path = MODEL_DIR / "rf_classifier.pkl"
 
-        print("Models loaded")
+        # Download from Drive
+        download_file(
+            "https://drive.google.com/uc?id=1wDRvOx38u-LgUSVciw2zIfc6H_7eI8uE",
+            reg_path,
+        )
+        download_file(
+            "https://drive.google.com/uc?id=1KFI1kwucXklm-TWDaphLDRu9xohWJT2u",
+            cls_path,
+        )
+
+        # Load
+        reg_model = joblib.load(reg_path)
+        cls_model = joblib.load(cls_path)
+
+        print("Models loaded successfully")
 
     except Exception as e:
         print("Failed loading models:", e)
         reg_model = None
         cls_model = None
-        
-        
-        
+
+
+# -----------------------------------
+# PREPROCESS
+# -----------------------------------
 def preprocess_input(data: dict):
     if reg_model is None or cls_model is None:
         raise Exception("Models not loaded")
@@ -45,7 +84,10 @@ def preprocess_input(data: dict):
 
     return df_reg, df_cls
 
-# prediction function
+
+# -----------------------------------
+# PREDICT
+# -----------------------------------
 def predict(data: dict):
     load_models()
 
@@ -71,6 +113,10 @@ def predict(data: dict):
     }
     
     
+
+# -----------------------------------
+# INSIGHTS
+# -----------------------------------
 
 # If level is Weak:
 # - Focus on basic improvements
@@ -127,8 +173,9 @@ def generate_insights_with_llm(data: dict, score: float, level: str):
     return insights
 
 
-
-# explanation function
+# -----------------------------------
+# EXPLAIN
+# -----------------------------------
 def explain_prediction(data: dict):
     load_models()
 
