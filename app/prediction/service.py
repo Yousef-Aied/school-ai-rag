@@ -1,17 +1,43 @@
 import joblib
 import pandas as pd
+from pathlib import Path
 from app.llm.groq_client import ask_groq
 from app.llm.groq_client import ask_groq_json
 
 
-reg_model = joblib.load("app/models/rf_regressor.pkl")
-cls_model = joblib.load("app/models/rf_classifier.pkl")
+reg_model = None
+cls_model = None
 
+def load_models():
+    global reg_model, cls_model
 
+    if reg_model is not None and cls_model is not None:
+        return
+
+    try:
+        print("Loading models...")
+
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        MODEL_DIR = BASE_DIR / "models"
+
+        reg_model = joblib.load(MODEL_DIR / "rf_regressor.pkl")
+        cls_model = joblib.load(MODEL_DIR / "rf_classifier.pkl")
+
+        print("Models loaded")
+
+    except Exception as e:
+        print("Failed loading models:", e)
+        reg_model = None
+        cls_model = None
+        
+        
+        
 def preprocess_input(data: dict):
+    if reg_model is None or cls_model is None:
+        raise Exception("Models not loaded")
+
     df = pd.DataFrame([data])
 
-    # encoding
     df = pd.get_dummies(df)
 
     df_reg = df.reindex(columns=reg_model.feature_names_in_, fill_value=0)
@@ -21,13 +47,16 @@ def preprocess_input(data: dict):
 
 # prediction function
 def predict(data: dict):
+    load_models()
+
+    if reg_model is None or cls_model is None:
+        return {"error": "Models not loaded"}
+
     df_reg, df_cls = preprocess_input(data)
 
-    # prediction
     score = reg_model.predict(df_reg)[0]
     level_raw = cls_model.predict(df_cls)[0]
 
-    # level
     label_map = {
         0: "Weak",
         1: "Medium",
@@ -35,9 +64,6 @@ def predict(data: dict):
     }
 
     level = label_map.get(int(level_raw), "Unknown")
-
-    print("AI SCORE:", score)
-    print("AI LEVEL:", level)
 
     return {
         "predicted_score": round(float(score), 2),
@@ -104,9 +130,13 @@ def generate_insights_with_llm(data: dict, score: float, level: str):
 
 # explanation function
 def explain_prediction(data: dict):
+    load_models()
+
+    if reg_model is None or cls_model is None:
+        return {"error": "Models not loaded"}
+
     df_reg, df_cls = preprocess_input(data)
 
-    # predictions
     score = reg_model.predict(df_reg)[0]
     level_raw = cls_model.predict(df_cls)[0]
 
@@ -117,7 +147,7 @@ def explain_prediction(data: dict):
     }
 
     level = label_map.get(int(level_raw), "Unknown")
-
+    
     # if/else => LLM
     insights = generate_insights_with_llm(data, score, level)
 
@@ -126,3 +156,6 @@ def explain_prediction(data: dict):
         "level": level,
         "insights": insights
     }
+    
+    
+    

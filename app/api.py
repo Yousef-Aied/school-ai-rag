@@ -1,5 +1,6 @@
 # API
 from fastapi import FastAPI
+import os
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pathlib import Path
@@ -19,7 +20,7 @@ from app.analyze.router import router as analyze_router
 from app.analyze.store import get_profile
 
 # Prediction service
-# from app.prediction.router import router as prediction_router
+from app.prediction.router import router as prediction_router
 
 import requests
 
@@ -52,13 +53,6 @@ def build_style_hint(profile: dict | None, student_name: str | None = None) -> s
 
 app = FastAPI(title="School AI RAG API")
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
 
 app.add_middleware(
     CORSMiddleware,
@@ -117,14 +111,14 @@ def root():
 #     vectorstore = build_index_if_needed()
 
 
-@app.on_event("startup")
-def on_startup():
-    global vectorstore
-    try:
-        vectorstore = build_index_if_needed()
-    except Exception as e:
-        print("Vectorstore init failed:", e)
-        vectorstore = None
+# @app.on_event("startup")
+# def on_startup():
+#     global vectorstore
+#     try:
+#         vectorstore = build_index_if_needed()
+#     except Exception as e:
+#         print("Vectorstore init failed:", e)
+#         vectorstore = None
 
 
 # -----------------------------
@@ -148,14 +142,24 @@ class ChatResponse(BaseModel):
 # Strong → Advanced + deeper
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
-    # context = retrieve_context(
-    #     vectorstore, query=req.message, k=4, grade=req.grade, subject=req.subject  #Top 4 Chunks
-    # )
+    global vectorstore
+
+    #build if it's not there
+    if vectorstore is None:
+        print("Auto-building vectorstore...")
+        vectorstore = build_index_if_needed()
+
+    # context
     if vectorstore:
         context = retrieve_context(
-            vectorstore, query=req.message, k=4, grade=req.grade, subject=req.subject
+            vectorstore,
+            query=req.message,
+            k=4,
+            grade=req.grade,
+            subject=req.subject
         )
     else:
+        print("No vectorstore → using empty context")
         context = ""
 
     profile = get_profile(req.student_id) if req.student_id else None
@@ -165,9 +169,10 @@ def chat(req: ChatRequest):
     student_score = 70
 
     if req.student_id:
-        try:
+        try: 
+            BASE_API = os.getenv("BACKEND_URL", "https://school-ai-backend-2qd1.onrender.com")
             res = requests.get(
-                f"http://127.0.0.1:7265/api/student/prediction?studentId={req.student_id}"
+                f"{BASE_API}/api/student/prediction?studentId={req.student_id}"
             )
 
             if res.status_code == 200:
@@ -203,8 +208,34 @@ def chat(req: ChatRequest):
 
 
 # -----------------------------
+# BUILD RAG MANUALLY (for testing)
+# -----------------------------
+@app.post("/api/build-rag")
+def build_rag(force: bool = False):
+    global vectorstore
+
+    if vectorstore is not None and not force:
+        return {"status": "Already built"}
+
+    try:
+        print("Building vectorstore manually...")
+
+        vectorstore = build_index_if_needed()
+
+        if vectorstore is None:
+            return {"status": "No PDFs found or build failed"}
+
+        return {"status": "RAG built successfully"}
+
+    except Exception as e:
+        print("Build failed:", e)
+        return {"status": "error", "message": str(e)}
+
+
+# -----------------------------
 # ROUTERS
 # -----------------------------
 app.include_router(quiz_router)
 app.include_router(analyze_router)
-# app.include_router(prediction_router)
+app.include_router(prediction_router)
+
