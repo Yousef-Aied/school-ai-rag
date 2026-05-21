@@ -20,7 +20,7 @@ dist/
 
 # AI Models
 *.pkl
-models/
+app/models/
 data/outputs/
 
 # OS
