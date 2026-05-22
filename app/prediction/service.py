@@ -23,19 +23,18 @@ MODEL_DIR = BASE_DIR / "models"
 # -----------------------------------
 def download_file(url, path):
     if path.exists():
-        return  # already downloaded
+        return
 
     print(f"Downloading {path.name}...")
 
-    r = requests.get(url, stream=True, timeout=60)
+    r = requests.get(url, stream=True)
 
     if r.status_code == 200:
         with open(path, "wb") as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
+            for chunk in r.iter_content(8192):
+                f.write(chunk)
     else:
-        print("Download failed:", r.status_code)
+        raise Exception(f"Download failed: {r.status_code}")
 
 # -----------------------------------
 # LOAD MODELS (FIXED) 
