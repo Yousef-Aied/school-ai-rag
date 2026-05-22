@@ -5,8 +5,8 @@ from pathlib import Path
 from app.llm.groq_client import ask_groq
 from app.llm.groq_client import ask_groq_json
 
-# https://drive.google.com/file/d/1wDRvOx38u-LgUSVciw2zIfc6H_7eI8uE/view?usp=sharing
-# https://drive.google.com/file/d/1KFI1kwucXklm-TWDaphLDRu9xohWJT2u/view?usp=sharing
+# rf_regressor.pkl = https://drive.google.com/file/d/1EqNp1gTeWRX8LPyq7MJ7m-tP4rhh8i0w/view?usp=sharing
+# rf_classifier.pkl = https://drive.google.com/file/d/1_GCQYjE7VN6VFBfpcli91L_b_Nc7k907/view?usp=sharing
 
 # -----------------------------------
 # GLOBALS
@@ -55,8 +55,8 @@ def load_models():
         reg_path = MODEL_DIR / "rf_regressor.pkl"
         cls_path = MODEL_DIR / "rf_classifier.pkl"
 
-        download_file("https://drive.google.com/uc?id=1wDRvOx38u-LgUSVciw2zIfc6H_7eI8uE", reg_path)
-        download_file("https://drive.google.com/uc?id=1KFI1kwucXklm-TWDaphLDRu9xohWJT2u", cls_path)
+        download_file("https://drive.google.com/uc?id=1EqNp1gTeWRX8LPyq7MJ7m-tP4rhh8i0w", reg_path)
+        download_file("https://drive.google.com/uc?id=1_GCQYjE7VN6VFBfpcli91L_b_Nc7k907", cls_path)
 
         reg_model = joblib.load(reg_path)
         cls_model = joblib.load(cls_path)
