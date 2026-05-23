@@ -26,7 +26,7 @@ import requests
 
 
 # -----------------------------
-# STYLE BUILDER (clean)
+# STYLE BUILDER (clean) 
 # -----------------------------
 def build_style_hint(profile: dict | None, student_name: str | None = None) -> str:
     hint = ""
@@ -142,36 +142,18 @@ class ChatResponse(BaseModel):
 
 
 # Weak → Simple explanation
-# Medium → Step-by-step
+# Medium → Step-by-step 
 # Strong → Advanced + deeper
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
-    global vectorstore
 
-    #build if it's not there Medium
-    if vectorstore is None:
-        print("Auto-building vectorstore...")
-        vectorstore = build_index_if_needed()
+    context = ""
 
-    # context
-    if vectorstore:
-        context = retrieve_context(
-            vectorstore,
-            query=req.message,
-            k=4,
-            grade=req.grade,
-            subject=req.subject
-        )
-    else:
-        print("No vectorstore → using empty context")
-        context = ""
-
-    profile = get_profile(req.student_id) if req.student_id else None
+    profile = None
 
     student_level = req.student_level or "Medium"
     student_score = req.predicted_score or 70
 
-    # to merge style
     base_style = build_style_hint(profile, req.student_name)
 
     agent_style = f"""
@@ -196,7 +178,7 @@ def chat(req: ChatRequest):
 
 
 # -----------------------------
-# BUILD RAG MANUALLY (for testing)
+# BUILD RAG MANUALLY (for testing) 
 # -----------------------------
 @app.post("/api/build-rag")
 def build_rag(force: bool = False):
