@@ -12,6 +12,7 @@ from app.rag.splitter import split_docs
 from app.rag.indexer import build_or_load_vectorstore
 from app.rag.retriever import retrieve_context
 from app.llm.groq_client import ask_groq
+from app.prediction.service import load_models
 
 # Routers
 from app.quiz.router import router as quiz_router
@@ -111,15 +112,18 @@ def root():
 #     vectorstore = build_index_if_needed()
 
 
-@app.on_event("startup")
-def on_startup():
-    global vectorstore
-    try:
-        vectorstore = build_index_if_needed()
-    except Exception as e:
-        print("Vectorstore init failed:", e)
-        vectorstore = None
+# @app.on_event("startup")
+# def startup():
+#     global vectorstore
 
+#     try:
+#         vectorstore = build_index_if_needed()
+#     except Exception as e:
+#         print("Vectorstore init failed:", e)
+#         vectorstore = None
+    
+#     # Download the model once
+#     load_models()
 
 # -----------------------------
 # CHAT context
@@ -146,6 +150,11 @@ class ChatResponse(BaseModel):
 # Strong → Advanced + deeper
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
+    global vectorstore
+
+    if vectorstore is None:
+        print("Building vectorstore lazily...")
+        vectorstore = build_index_if_needed()
 
     if vectorstore:
         context = retrieve_context(
@@ -154,7 +163,7 @@ def chat(req: ChatRequest):
             k=4,
             grade=req.grade,
             subject=req.subject
-    )
+        )
     else:
         context = ""
 

@@ -51,45 +51,27 @@ def download_file(url, path):
 # -----------------------------------
 def load_models():
     global reg_model, cls_model
-    
+
     if reg_model is not None and cls_model is not None:
         return
 
-    try:
-        print("Loading models...")
+    print("Loading models...")
 
-        BASE_DIR = Path(__file__).resolve().parent.parent
-        MODEL_DIR = BASE_DIR / "models"
-        MODEL_DIR.mkdir(exist_ok=True)
+    MODEL_DIR.mkdir(exist_ok=True)
 
-        reg_path = MODEL_DIR / "rf_regressor.pkl"
-        cls_path = MODEL_DIR / "rf_classifier.pkl"
-        
-        if reg_path.exists():
-            reg_path.unlink()
-        if cls_path.exists():
-            cls_path.unlink()
+    reg_path = MODEL_DIR / "rf_regressor.pkl"
+    cls_path = MODEL_DIR / "rf_classifier.pkl"
 
-        download_file(
-            "https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_regressor.pkl",
-            reg_path,
-        )
+    if not reg_path.exists():
+        download_file("https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_regressor.pkl", reg_path)
 
-        download_file(
-            "https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_classifier.pkl",
-            cls_path,
-        )
+    if not cls_path.exists():
+        download_file("https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_classifier.pkl", cls_path)
 
-        reg_model = joblib.load(reg_path)
-        cls_model = joblib.load(cls_path)
-            
-        print("Models loaded successfully")
+    reg_model = joblib.load(reg_path)
+    cls_model = joblib.load(cls_path)
 
-    except Exception as e:
-        print("Failed loading models:", e)
-        reg_model = None
-        cls_model = None
-
+    print("Models loaded once")
 
 # -----------------------------------
 # PREPROCESS
@@ -113,7 +95,6 @@ def preprocess_input(data: dict):
 # -----------------------------------
 def predict(data: dict):
     load_models()
-
     if reg_model is None or cls_model is None:
         return {"error": "Models not loaded"}
 
@@ -193,7 +174,6 @@ def generate_insights_with_llm(data: dict, score: float, level: str):
 # -----------------------------------
 def explain_prediction(data: dict):
     load_models()
-
     if reg_model is None or cls_model is None:
         return {"error": "Models not loaded"}
 
