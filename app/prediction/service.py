@@ -22,24 +22,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_DIR = BASE_DIR / "models"
 
 
+
 # -----------------------------------
 # DOWNLOAD
 # -----------------------------------
 def download_file(url, path):
+
     if path.exists() and path.stat().st_size > 1000000:
-       return
+        print(f"{path.name} already exists")
+        return
 
     print(f"Downloading {path.name}...")
 
     r = requests.get(url, stream=True, timeout=60)
-    print(f"Downloaded: {path.stat().st_size} bytes")
 
-    if r.status_code == 200:
-        with open(path, "wb") as f:
-            for chunk in r.iter_content(8192):
-                f.write(chunk)
-    else:
+    if r.status_code != 200:
         raise Exception(f"Download failed: {r.status_code}")
+
+    with open(path, "wb") as f:
+        for chunk in r.iter_content(8192):
+            f.write(chunk)
+
+    print(f"Downloaded: {path.stat().st_size} bytes")
 
 
 # -----------------------------------
@@ -47,7 +51,7 @@ def download_file(url, path):
 # -----------------------------------
 def load_models():
     global reg_model, cls_model
-
+    
     if reg_model is not None and cls_model is not None:
         return
 
@@ -60,6 +64,11 @@ def load_models():
 
         reg_path = MODEL_DIR / "rf_regressor.pkl"
         cls_path = MODEL_DIR / "rf_classifier.pkl"
+        
+        if reg_path.exists():
+            reg_path.unlink()
+        if cls_path.exists():
+            cls_path.unlink()
 
         download_file(
             "https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_regressor.pkl",
@@ -73,7 +82,7 @@ def load_models():
 
         reg_model = joblib.load(reg_path)
         cls_model = joblib.load(cls_path)
-
+            
         print("Models loaded successfully")
 
     except Exception as e:
