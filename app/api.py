@@ -102,7 +102,7 @@ def build_index_if_needed():
 
 @app.get("/")
 def root():
-    return {"status": "API is running"}
+    return {"status": "NEW VERSION WORKING"}
 
 
 # @app.on_event("startup")
