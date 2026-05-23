@@ -111,14 +111,14 @@ def root():
 #     vectorstore = build_index_if_needed()
 
 
-# @app.on_event("startup")
-# def on_startup():
-#     global vectorstore
-#     try:
-#         vectorstore = build_index_if_needed()
-#     except Exception as e:
-#         print("Vectorstore init failed:", e)
-#         vectorstore = None
+@app.on_event("startup")
+def on_startup():
+    global vectorstore
+    try:
+        vectorstore = build_index_if_needed()
+    except Exception as e:
+        print("Vectorstore init failed:", e)
+        vectorstore = None
 
 
 # -----------------------------
@@ -147,7 +147,16 @@ class ChatResponse(BaseModel):
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
 
-    context = ""
+    if vectorstore:
+        context = retrieve_context(
+            vectorstore,
+            query=req.message,
+            k=4,
+            grade=req.grade,
+            subject=req.subject
+    )
+    else:
+        context = ""
 
     profile = None
 
