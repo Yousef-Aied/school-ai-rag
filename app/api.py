@@ -216,5 +216,5 @@ def build_rag(force: bool = False):
 # -----------------------------
 app.include_router(quiz_router)
 app.include_router(analyze_router)
-# app.include_router(prediction_router)
+app.include_router(prediction_router)
 

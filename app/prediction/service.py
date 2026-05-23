@@ -13,7 +13,7 @@ from app.llm.groq_client import ask_groq_json
 # rf_regressor.pkl ="https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_regressor.pkl"
 # rf_classifier.pkl = "https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_classifier.pkl"
 # -----------------------------------
-# GLOBALS
+# GLOBALS r = requests.get(url, stream=True, timeout=60)
 # -----------------------------------
 reg_model = None
 cls_model = None
@@ -26,12 +26,13 @@ MODEL_DIR = BASE_DIR / "models"
 # DOWNLOAD
 # -----------------------------------
 def download_file(url, path):
-    if path.exists():
-        return
+    if path.exists() and path.stat().st_size > 1000000:
+       return
 
     print(f"Downloading {path.name}...")
 
-    r = requests.get(url, stream=True)
+    r = requests.get(url, stream=True, timeout=60)
+    print(f"Downloaded: {path.stat().st_size} bytes")
 
     if r.status_code == 200:
         with open(path, "wb") as f:

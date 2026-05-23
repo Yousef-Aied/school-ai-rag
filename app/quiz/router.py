@@ -76,7 +76,7 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
     #     "Each item MUST have:\n"
     #     '- "question_text": string\n'
     #     '- "choices": array of 4 strings\n'
-    #     '- "correct_index": integer 0-3\n'
+    #     '- "correct_index": integer 0-3\n' except Exception as e:
     # )
 
     def try_parse(raw: str):
@@ -120,10 +120,13 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
         try:
             return try_parse(raw2)
         except Exception as e:
+            print("RAW1:", raw1)
+            print("RAW2:", raw2)
             raise HTTPException(
                 status_code=500,
-                detail=f"Quiz JSON parse failed after retry: {e}\nRaw1:\n{raw1}\n\nRaw2:\n{raw2}",
+                detail=f"Quiz JSON parse failed after retry: {e}\nRaw1:\n{raw1}\n\nRaw2:\n{raw2}",   
             )
+        
 
 
 @router.post("/generate", response_model=GenerateQuizResponse)
