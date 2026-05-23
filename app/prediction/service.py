@@ -5,9 +5,13 @@ from pathlib import Path
 from app.llm.groq_client import ask_groq
 from app.llm.groq_client import ask_groq_json
 
+# drive
 # rf_regressor.pkl = https://drive.google.com/file/d/1EqNp1gTeWRX8LPyq7MJ7m-tP4rhh8i0w/view?usp=sharing
 # rf_classifier.pkl = https://drive.google.com/file/d/1_GCQYjE7VN6VFBfpcli91L_b_Nc7k907/view?usp=sharing
 
+# huggingface
+# rf_regressor.pkl ="https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_regressor.pkl"
+# rf_classifier.pkl = "https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_classifier.pkl"
 # -----------------------------------
 # GLOBALS
 # -----------------------------------
@@ -36,8 +40,9 @@ def download_file(url, path):
     else:
         raise Exception(f"Download failed: {r.status_code}")
 
+
 # -----------------------------------
-# LOAD MODELS (FIXED) 
+# LOAD MODELS (FIXED)
 # -----------------------------------
 def load_models():
     global reg_model, cls_model
@@ -55,8 +60,15 @@ def load_models():
         reg_path = MODEL_DIR / "rf_regressor.pkl"
         cls_path = MODEL_DIR / "rf_classifier.pkl"
 
-        download_file("https://drive.google.com/uc?id=1EqNp1gTeWRX8LPyq7MJ7m-tP4rhh8i0w", reg_path)
-        download_file("https://drive.google.com/uc?id=1_GCQYjE7VN6VFBfpcli91L_b_Nc7k907", cls_path)
+        download_file(
+            "https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_regressor.pkl",
+            reg_path,
+        )
+
+        download_file(
+            "https://huggingface.co/YousefAlshaer/school-ai-models/resolve/main/rf_classifier.pkl",
+            cls_path,
+        )
 
         reg_model = joblib.load(reg_path)
         cls_model = joblib.load(cls_path)
@@ -67,6 +79,7 @@ def load_models():
         print("Failed loading models:", e)
         reg_model = None
         cls_model = None
+
 
 # -----------------------------------
 # PREPROCESS
@@ -99,20 +112,12 @@ def predict(data: dict):
     score = reg_model.predict(df_reg)[0]
     level_raw = cls_model.predict(df_cls)[0]
 
-    label_map = {
-        0: "Weak",
-        1: "Medium",
-        2: "Strong"
-    }
+    label_map = {0: "Weak", 1: "Medium", 2: "Strong"}
 
     level = label_map.get(int(level_raw), "Unknown")
 
-    return {
-        "predicted_score": round(float(score), 2),
-        "level": level
-    }
-    
-    
+    return {"predicted_score": round(float(score), 2), "level": level}
+
 
 # -----------------------------------
 # INSIGHTS
@@ -123,6 +128,7 @@ def predict(data: dict):
 
 # If level is Medium:
 # - Focus on consistency and improvement
+
 
 # If level is Strong:
 # - Suggest advanced strategies and challenges
@@ -161,14 +167,13 @@ def generate_insights_with_llm(data: dict, score: float, level: str):
 
     try:
         import json
+
         insights = json.loads(response)
     except Exception as e:
         print("JSON ERROR:", e)
         print("RAW RESPONSE:", response)
 
-        insights = [
-            {"title": "AI Insight", "text": "Failed to parse insights"}
-        ]
+        insights = [{"title": "AI Insight", "text": "Failed to parse insights"}]
 
     return insights
 
@@ -187,22 +192,15 @@ def explain_prediction(data: dict):
     score = reg_model.predict(df_reg)[0]
     level_raw = cls_model.predict(df_cls)[0]
 
-    label_map = {
-        0: "Weak",
-        1: "Medium",
-        2: "Strong"
-    }
+    label_map = {0: "Weak", 1: "Medium", 2: "Strong"}
 
     level = label_map.get(int(level_raw), "Unknown")
-    
+
     # if/else => LLM
     insights = generate_insights_with_llm(data, score, level)
 
     return {
         "predicted_score": round(float(score), 2),
         "level": level,
-        "insights": insights
+        "insights": insights,
     }
-    
-    
-    
