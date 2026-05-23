@@ -127,10 +127,14 @@ def root():
 class ChatRequest(BaseModel):
     conversation_id: str
     message: str
+
     student_id: Optional[int] = None
     student_name: Optional[str] = None
     grade: Optional[int] = None
     subject: Optional[str] = "auto"
+
+    student_level: Optional[str] = "Medium"
+    predicted_score: Optional[float] = 70
 
 
 class ChatResponse(BaseModel):
@@ -164,27 +168,8 @@ def chat(req: ChatRequest):
 
     profile = get_profile(req.student_id) if req.student_id else None
 
-    # Bringing prediction from .NET
-    student_level = "Medium"
-    student_score = 70
-
-    if req.student_id:
-        try: 
-            BASE_API = os.getenv("BACKEND_URL", "https://school-ai-backend-2qd1.onrender.com")
-            res = requests.get(
-                f"{BASE_API}/api/student/prediction?studentId={req.student_id}",
-                timeout=5
-            )   
-
-            if res.status_code == 200:
-                data = res.json()
-                student_level = data.get("level", "Medium")
-                student_score = data.get("predictedScore", 70)
-            else:
-                print("Prediction API failed:", res.status_code)
-
-        except Exception as e:
-            print("Prediction fetch error:", e)
+    student_level = req.student_level or "Medium"
+    student_score = req.predicted_score or 70
 
     # to merge style
     base_style = build_style_hint(profile, req.student_name)
