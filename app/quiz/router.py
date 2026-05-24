@@ -24,7 +24,7 @@ from app.llm.groq_client import ask_groq_json
 router = APIRouter(prefix="/api/quiz", tags=["quiz"])
 
 # use the same vectorstore
-BASE_DIR = Path(__file__).resolve().parent.parent.parent  # project root
+BASE_DIR = Path(__file__).resolve().parent.parent.parent  # project root isinstance
 VECTORSTORE_DIR = BASE_DIR / "vectorstore"
 
 _vectorstore = None
@@ -49,35 +49,23 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
         "IMPORTANT RULES:\n"
         "- Use ONLY the provided context.\n"
         "- Do NOT use external knowledge.\n"
-        "- Do NOT repeat the same question type.\n"
-        "- Questions must be suitable for the student's grade level.\n"
-        "- Questions must vary in difficulty (easy, medium, hard).\n"
-        "- Include conceptual questions, not just calculations.\n"
-        "- Avoid trivial repetition (like many square calculations).\n"
-        "- Focus on understanding, not memorization.\n"
-        "Question types MUST include a mix of:\n"
-        "1. Concept understanding\n"
-        "2. Application problems\n"
-        "3. Word problems\n"
-        "4. Calculation (limited)\n\n"
-        "Return STRICT JSON only.\n"
+        "- Return ONLY valid JSON.\n"
+        "- No markdown.\n"
+        "- No explanations.\n"
+        "- Start directly with JSON.\n"
+        "- Output MUST be:\n"
+        "{\n"
+        '  "questions": [\n'
+        "    {\n"
+        '      "question_text": "Question here",\n'
+        '      "choices": ["A", "B", "C", "D"],\n'
+        '      "correct_index": 0\n'
+        "    }\n"
+        "  ]\n"
+        "}\n"
+        "- choices MUST contain EXACTLY 4 items.\n"
+        "- correct_index MUST be between 0 and 3.\n"
     )
-
-    # instruction = (
-    #     f"Create EXACTLY {n} multiple-choice questions STRICTLY from the provided context.\n"
-    #     "IMPORTANT RULES:\n"
-    #     "- Do NOT use any external knowledge.\n"
-    #     "- Do NOT invent questions.\n"
-    #     "- Use ONLY the provided context.\n"
-    #     "- If the context is insufficient, generate simpler questions from it.\n"
-    #     "- Questions must be directly based on the textbook content.\n\n"
-    #     "Return STRICT JSON only.\n"
-    #     "Output must be a JSON array of length exactly n.\n"
-    #     "Each item MUST have:\n"
-    #     '- "question_text": string\n'
-    #     '- "choices": array of 4 strings\n'
-    #     '- "correct_index": integer 0-3\n' except Exception as e:
-    # ) question_text
 
     def try_parse(raw: str):
         s = raw.strip()
@@ -87,8 +75,17 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
             s = s.replace("```json", "").replace("```", "").strip()
 
         data = json.loads(s)
+
+        # support:
+        # 1) direct array
+        # 2) { "questions": [...] }
+
+        if isinstance(data, dict) and "questions" in data:
+            data = data["questions"]
+
         if not isinstance(data, list) or len(data) != n:
             raise ValueError("JSON must be an array of length n")
+
         for item in data:
             if not isinstance(item, dict):
                 raise ValueError("Each item must be an object")
