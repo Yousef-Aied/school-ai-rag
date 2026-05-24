@@ -54,13 +54,13 @@ def build_style_hint(profile: dict | None, student_name: str | None = None) -> s
 
 app = FastAPI(title="School AI RAG API")
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://school-ai-rag-production.up.railway.app",
+        "https://school-ai-frontend.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
