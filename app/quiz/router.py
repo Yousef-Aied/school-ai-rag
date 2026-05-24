@@ -77,7 +77,7 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
     #     '- "question_text": string\n'
     #     '- "choices": array of 4 strings\n'
     #     '- "correct_index": integer 0-3\n' except Exception as e:
-    # )
+    # ) question_text
 
     def try_parse(raw: str):
         s = raw.strip()
@@ -92,12 +92,30 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
         for item in data:
             if not isinstance(item, dict):
                 raise ValueError("Each item must be an object")
-            if (
-                "question_text" not in item
-                or "choices" not in item
-                or "correct_index" not in item
-            ):
+            # if (
+            #     "question_text" not in item
+            #     or "choices" not in item
+            #     or "correct_index" not in item
+            # ):
+            #     raise ValueError("Missing keys")
+            question_text = item.get("question_text") or item.get("question")
+            choices = item.get("choices") or item.get("options")
+
+            if question_text is None or choices is None:
                 raise ValueError("Missing keys")
+
+            # If it returns correct instead of correct_index
+            if "correct_index" not in item:
+                if "correct" in item:
+                    try:
+                        item["correct_index"] = choices.index(item["correct"])
+                    except:
+                        item["correct_index"] = 0
+                else:
+                    item["correct_index"] = 0
+
+            item["question_text"] = question_text
+            item["choices"] = choices
             if not isinstance(item["choices"], list) or len(item["choices"]) != 4:
                 raise ValueError("choices must be array of 4")
             ci = int(item["correct_index"])
@@ -124,9 +142,8 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
             print("RAW2:", raw2)
             raise HTTPException(
                 status_code=500,
-                detail=f"Quiz JSON parse failed after retry: {e}\nRaw1:\n{raw1}\n\nRaw2:\n{raw2}",   
+                detail=f"Quiz JSON parse failed after retry: {e}\nRaw1:\n{raw1}\n\nRaw2:\n{raw2}",
             )
-        
 
 
 @router.post("/generate", response_model=GenerateQuizResponse)
