@@ -12,7 +12,18 @@ def analyze_chat_endpoint(req: AnalyzeChatRequest):
         raise HTTPException(status_code=400, detail="messages is empty")
 
     # analyze
-    result = analyze_chat(messages=[m.model_dump() for m in req.messages])
+    try:
+        result = analyze_chat(messages=[m.model_dump() for m in req.messages])
+
+    except Exception as e:
+        print("ANALYZE ERROR:", e)
+
+        result = {
+            "stress_level": 50,
+            "motivation": 50,
+            "confidence": 0.5,
+            "signals": []
+        }
 
     profile = {
         "student_id": req.student_id,
