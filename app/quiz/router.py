@@ -24,7 +24,7 @@ from app.llm.groq_client import ask_groq_json
 router = APIRouter(prefix="/api/quiz", tags=["quiz"])
 
 # use the same vectorstore
-BASE_DIR = Path(__file__).resolve().parent.parent.parent  # project root isinstance
+BASE_DIR = Path(__file__).resolve().parent.parent.parent  # project root raw2
 VECTORSTORE_DIR = BASE_DIR / "vectorstore"
 
 _vectorstore = None
@@ -83,8 +83,13 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
         if isinstance(data, dict) and "questions" in data:
             data = data["questions"]
 
-        if not isinstance(data, list) or len(data) != n:
-            raise ValueError("JSON must be an array of length n")
+        if not isinstance(data, list):
+            raise ValueError("JSON must be a list")
+
+        if len(data) < n:
+            raise ValueError("Not enough questions")
+
+        data = data[:n]
 
         for item in data:
             if not isinstance(item, dict):
@@ -125,11 +130,12 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
     try:
         return try_parse(raw1)
     except Exception:
-        # 2nd attempt: stronger instruction
+        # 2nd attempt: stronger instruction isinstance
         raw2 = ask_groq_json(
             instruction
-            + "\nIMPORTANT: Return ONLY JSON. Start with '[' and end with ']'. "
-            "No text before or after.\n" + f"Topic: {question}",
+            + "\nIMPORTANT: Return ONLY valid JSON object with a 'questions' array. "
+            "No markdown. No explanations. No text before or after.\n"
+            + f"Topic: {question}",
             context,
         )
         try:
