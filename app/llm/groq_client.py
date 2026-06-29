@@ -30,6 +30,9 @@ def ask_groq(question: str, context: str, style_hint: str = "") -> str:
                 "4. If the context is missing or incomplete, still try to explain simply using your own knowledge.\n"
                 "5. Always try to provide examples when the student seems confused.\n\n"
                 "6. Never refuse to explain a concept if the student is confused.\n"
+                "7. If the user says 'explain again' Or any equivalent sentence, repeat the last explanation in a simpler way.\n"
+                "8. If the user says 'give example' Or any equivalent sentence, generate an example based on the last discussed concept.\n"
+                "9. Never ask what topic if there is previous conversation.\n"
 
                 "Formatting rules (IMPORTANT):\n"
                 "- Output MUST be valid Markdown.\n"

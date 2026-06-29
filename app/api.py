@@ -263,11 +263,24 @@ def chat(req: ChatRequest):
     - Only explain the topic
     """
 
-    try:
-        answer = ask_groq(req.message, context, style_hint=style_hint)
-    except Exception as e:
-        print("CHAT ERROR:", e)
-        answer = "Sorry, something went wrong. Please try again."
+    history_text = "\n".join(
+        [f"{m['role']}: {m['content']}" for m in history[-3:]]
+    ) if history else "No previous conversation."
+
+    full_question = f"""
+    This is a conversation between a student and a tutor.
+
+    Previous messages:
+    {history_text}
+
+    Now the student asks:
+    {req.message}
+
+    Continue the explanation naturally.
+    """
+    
+    # answer = ask_groq(req.message, context, style_hint=style_hint)
+    answer = ask_groq(full_question, context, style_hint=style_hint)
 
     return {"answer": answer}
 
