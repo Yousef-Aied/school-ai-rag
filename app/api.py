@@ -25,14 +25,14 @@ from app.analyze.chat_memory import get_conversation, save_message
 
 from app.analyze.store import get_profile
 
-# Prediction service 
+# Prediction service
 from app.prediction.router import router as prediction_router
 
 import requests
 
 
 # -----------------------------
-# STYLE BUILDER (clean) 
+# STYLE BUILDER (clean)
 # -----------------------------
 def build_style_hint(profile: dict | None, student_name: str | None = None) -> str:
     hint = ""
@@ -136,9 +136,10 @@ def root():
 #     except Exception as e:
 #         print("Vectorstore init failed:", e)
 #         vectorstore = None
-    
+
 #     # Download the model once
 #     load_models()
+
 
 # -----------------------------
 # CHAT context
@@ -161,7 +162,7 @@ class ChatResponse(BaseModel):
 
 
 # Weak → Simple explanation
-# Medium → Step-by-step 
+# Medium → Step-by-step
 # Strong → Advanced + deeper
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
@@ -173,15 +174,10 @@ def chat(req: ChatRequest):
 
     if vectorstore:
         context = retrieve_context(
-            vectorstore,
-            query=req.message,
-            k=4,
-            grade=req.grade,
-            subject=req.subject
+            vectorstore, query=req.message, k=4, grade=req.grade, subject=req.subject
         )
     else:
         context = ""
-
 
     # 1 get previous history
     history = get_conversation(req.conversation_id)
@@ -198,36 +194,67 @@ def chat(req: ChatRequest):
 
     # 2 save profile
     if req.student_id:
-        save_profile(req.student_id, {
-            "student_id": req.student_id,
-            "conversation_id": req.conversation_id,
-            **analysis
-        })
+        save_profile(
+            req.student_id,
+            {
+                "student_id": req.student_id,
+                "conversation_id": req.conversation_id,
+                **analysis,
+            },
+        )
 
     # 3 load profile
     profile = get_profile(req.student_id) if req.student_id else None
-    
+    print("PROFILE:", profile)
 
-    student_level = req.student_level or "Medium"
+    # student_level = req.student_level or "Medium"
+
+    level_map = {"low": "Weak", "medium": "Medium", "high": "Strong"}
+
+    valid_levels = {"low", "medium", "high"}
+
+    understanding = None
+    if profile:
+        profile_level = profile.get("understanding_level")
+        if isinstance(profile_level, str):
+            profile_level = profile_level.lower()
+        if profile_level in valid_levels:
+            understanding = profile_level
+
+    request_level = None
+    if req.student_level:
+        request_level = str(req.student_level).strip().lower()
+        if request_level not in valid_levels:
+            request_level = None
+
+    student_level_key = understanding or request_level or "medium"
+    student_level = level_map.get(student_level_key, "Medium")
+
     student_score = req.predicted_score or 70
-
     base_style = build_style_hint(profile, req.student_name)
 
     agent_style = f"""
     Student Level: {student_level}
     Score: {student_score}
 
-    Instructions:
-    - If Weak → explain very simply with examples
-    - If Medium → explain step by step
-    - If Strong → give deeper explanation and challenges
-
-    Also:
-    - Be friendly
-    - Adapt explanation to student's level
+    Rules:
+    - Weak → explain very simply + examples
+    - Medium → explain step by step
+    - Strong → deeper explanation + challenges
     """
 
-    style_hint = base_style + "\n" + agent_style
+    style_hint = f"""
+    Student Profile:
+    - Understanding: {profile.get("understanding_level") if profile else "medium"}
+    - Learning Style: {profile.get("learning_style") if profile else "step_by_step"}
+    - Needs Examples: {profile.get("needs_examples") if profile else True}
+    - Engagement: {profile.get("engagement") if profile else "medium"}
+
+    Instructions:
+    {base_style}
+
+    {agent_style}
+    """
 
     answer = ask_groq(req.message, context, style_hint=style_hint)
 
@@ -235,7 +262,7 @@ def chat(req: ChatRequest):
 
 
 # -----------------------------
-# BUILD RAG MANUALLY (for testing) 
+# BUILD RAG MANUALLY (for testing)
 # -----------------------------
 @app.post("/api/build-rag")
 def build_rag(force: bool = False):
@@ -265,4 +292,3 @@ def build_rag(force: bool = False):
 app.include_router(quiz_router)
 app.include_router(analyze_router)
 app.include_router(prediction_router)
-
