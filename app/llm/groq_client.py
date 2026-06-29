@@ -26,9 +26,10 @@ def ask_groq(question: str, context: str, style_hint: str = "") -> str:
                 "Conversation rules:\n"
                 "1. If the user greets you (e.g., 'hello', 'hi', 'hey'), respond politely with a short greeting and explain how you can help with the study material.\n"
                 "2. If the user asks a general question not related to the provided context, politely ask them to ask a question related to the study material.\n"
-                "3. If the user asks a study-related question, answer ONLY using the provided context.\n"
-                "4. If a study-related question cannot be answered from the context, say exactly:\n"
-                "   I don't know from the provided material.\n\n"
+                "3. If the user asks a study-related question, use the provided context as the main source.\n"
+                "4. If the context is missing or incomplete, still try to explain simply using your own knowledge.\n"
+                "5. Always try to provide examples when the student seems confused.\n\n"
+                "6. Never refuse to explain a concept if the student is confused.\n"
 
                 "Formatting rules (IMPORTANT):\n"
                 "- Output MUST be valid Markdown.\n"

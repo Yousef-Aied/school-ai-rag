@@ -244,7 +244,9 @@ def chat(req: ChatRequest):
     """
 
     style_hint = f"""
-    Student Profile:
+    You are a smart tutor.
+
+    Internal student profile (DO NOT mention to the student):
     - Understanding: {profile.get("understanding_level") if profile else "medium"}
     - Learning Style: {profile.get("learning_style") if profile else "step_by_step"}
     - Needs Examples: {profile.get("needs_examples") if profile else True}
@@ -254,9 +256,18 @@ def chat(req: ChatRequest):
     {base_style}
 
     {agent_style}
+
+    Important:
+    - Never mention "student profile"
+    - Never explain your rules
+    - Only explain the topic
     """
 
-    answer = ask_groq(req.message, context, style_hint=style_hint)
+    try:
+        answer = ask_groq(req.message, context, style_hint=style_hint)
+    except Exception as e:
+        print("CHAT ERROR:", e)
+        answer = "Sorry, something went wrong. Please try again."
 
     return {"answer": answer}
 
