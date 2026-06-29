@@ -273,10 +273,10 @@ def chat(req: ChatRequest):
     Previous messages:
     {history_text}
 
-    Now the student asks:
-    {req.message}
+    The student is asking for an example related to the last explained topic.
 
-    Continue the explanation naturally.
+    Current question:
+    {req.message}
     """
     
     # answer = ask_groq(req.message, context, style_hint=style_hint)
