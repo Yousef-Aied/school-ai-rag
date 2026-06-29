@@ -24,9 +24,9 @@ class AnalyzeChatRequest(BaseModel):
 class AnalyzeChatResponse(BaseModel):
     student_id: int
     conversation_id: str
-    stress_level: int = Field(ge=0, le=100)
-    motivation: int = Field(ge=0, le=100)
-    confidence: float = Field(ge=0.0, le=1.0)
 
-    # optional helpful debug
-    signals: List[str] = []
+    understanding_level: str
+    learning_style: str
+    engagement: str
+    confusion_points: List[str]
+    needs_examples: bool

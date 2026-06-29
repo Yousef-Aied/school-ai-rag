@@ -20,56 +20,47 @@ def build_analyze_instruction(messages: List[dict]) -> str:
 
     # IMPORTANT: JSON ONLY output
     return f"""
-You are an educational chat analyst. 
-Return ONLY valid JSON with EXACT keys:
-{{
-  "stress_level": 0-100,
-  "motivation": 0-100,
-  "confidence": 0.0-1.0,
-  "signals": ["short phrases..."]
-}}
+    You are an educational chat analyzer.
 
-Rules:
-- Base your scores ONLY on the conversation text.
-- Be conservative: do NOT jump to extremes unless very clear.
-- stress_level: higher means more stress/anxiety/confusion/pressure.
-- motivation: higher means more engagement/effort/positive intent.
-- confidence: how sure you are about your estimates based on evidence.
+    Return ONLY valid JSON:
 
-Conversation:
-{convo_text}
-""".strip()
+    {{
+    "understanding_level": "low | medium | high",
+    "learning_style": "step_by_step | direct | visual",
+    "engagement": "low | medium | high",
+    "confusion_points": ["topics..."],
+    "needs_examples": true/false
+    }}
+
+    Rules:
+    - Base on student messages
+    - If student asks many questions → low understanding
+    - If student says "I don't understand" → confusion
+    - If student is short → low engagement
+    - If student asks for examples → needs_examples = true
+
+    Conversation:
+    {convo_text}
+    """.strip()
 
 
 def parse_analysis_json(raw: str) -> Dict[str, Any]:
-    """
-    Groq might return valid JSON but sometimes with spaces/newlines.
-    """
     raw = raw.strip()
 
-    # If it accidentally returns extra text, try to extract first JSON object
     if not raw.startswith("{"):
         start = raw.find("{")
         end = raw.rfind("}")
-        if start != -1 and end != -1 and end > start:
+        if start != -1 and end != -1:
             raw = raw[start : end + 1]
 
     data = json.loads(raw)
 
-    # normalize + clamp
-    stress = int(max(0, min(100, int(data.get("stress_level", 50)))))
-    mot = int(max(0, min(100, int(data.get("motivation", 50)))))
-    conf = float(data.get("confidence", 0.5))
-    conf = max(0.0, min(1.0, conf))
-    signals = data.get("signals") or []
-    if not isinstance(signals, list):
-        signals = []
-
     return {
-        "stress_level": stress,
-        "motivation": mot,
-        "confidence": conf,
-        "signals": [str(x) for x in signals][:10],
+        "understanding_level": data.get("understanding_level", "medium"),
+        "learning_style": data.get("learning_style", "step_by_step"),
+        "engagement": data.get("engagement", "medium"),
+        "confusion_points": data.get("confusion_points", [])[:5],
+        "needs_examples": bool(data.get("needs_examples", True)),
     }
 
 

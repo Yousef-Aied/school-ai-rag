@@ -16,11 +16,16 @@ from app.prediction.service import load_models
 
 # Routers
 from app.quiz.router import router as quiz_router
+
+# Analyze Chat
 from app.analyze.router import router as analyze_router
+from app.analyze.service import analyze_chat
+from app.analyze.store import get_profile, save_profile
+from app.analyze.chat_memory import get_conversation, save_message
 
 from app.analyze.store import get_profile
 
-# Prediction service
+# Prediction service 
 from app.prediction.router import router as prediction_router
 
 import requests
@@ -35,15 +40,25 @@ def build_style_hint(profile: dict | None, student_name: str | None = None) -> s
     if student_name:
         hint += f"Say hello to {student_name}.\n"
 
-    stress = int(profile.get("stress_level", 50)) if profile else 50
-    mot = int(profile.get("motivation", 50)) if profile else 50
+    if not profile:
+        return hint + "Explain step by step."
 
-    if stress >= 70 or mot <= 35:
+    level = profile.get("understanding_level", "medium")
+    style = profile.get("learning_style", "step_by_step")
+    needs_examples = profile.get("needs_examples", True)
+
+    if level == "low":
         hint += "Explain very simply.\n"
-    elif mot >= 70:
+    elif level == "high":
         hint += "Use advanced explanation.\n"
     else:
         hint += "Explain step by step.\n"
+
+    if needs_examples:
+        hint += "Give examples.\n"
+
+    if style == "visual":
+        hint += "Use analogies and simple visuals.\n"
 
     return hint
 
@@ -167,7 +182,31 @@ def chat(req: ChatRequest):
     else:
         context = ""
 
-    profile = None
+
+    # 1 get previous history
+    history = get_conversation(req.conversation_id)
+
+    # 2 add current message
+    current_msg = {"role": "user", "content": req.message}
+    messages = history + [current_msg]
+
+    # 3. save message
+    save_message(req.conversation_id, current_msg)
+
+    # 1 analyze current message
+    analysis = analyze_chat(messages)
+
+    # 2 save profile
+    if req.student_id:
+        save_profile(req.student_id, {
+            "student_id": req.student_id,
+            "conversation_id": req.conversation_id,
+            **analysis
+        })
+
+    # 3 load profile
+    profile = get_profile(req.student_id) if req.student_id else None
+    
 
     student_level = req.student_level or "Medium"
     student_score = req.predicted_score or 70

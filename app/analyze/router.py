@@ -19,10 +19,11 @@ def analyze_chat_endpoint(req: AnalyzeChatRequest):
         print("ANALYZE ERROR:", e)
 
         result = {
-            "stress_level": 50,
-            "motivation": 50,
-            "confidence": 0.5,
-            "signals": []
+            "understanding_level": "medium",
+            "learning_style": "step_by_step",
+            "engagement": "medium",
+            "confusion_points": [],
+            "needs_examples": True
         }
 
     profile = {
