@@ -2,8 +2,10 @@ from app.rag.indexer import build_or_load_vectorstore
 from app.rag.retriever import retrieve_context
 from app.llm.groq_client import ask_groq_json
 from pathlib import Path
+import json
+import re
 
-_vectorstore = None
+_vectorstore = None 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 VECTORSTORE_DIR = BASE_DIR / "vectorstore"
@@ -29,7 +31,12 @@ def generate_study_plan(student_id: int, student_data: dict):
 
     context = retrieve_context(
         vs,
-        query="math study plan for weak student",
+        subject = student_data.get("subject", "math"),
+        query = f"""
+        {student_data.get('level')} student
+        score {student_data.get('score')}
+        math weaknesses study plan
+        """,
         k=5
     )
     
@@ -43,40 +50,47 @@ def generate_study_plan(student_id: int, student_data: dict):
     Student:
     - Level: {student_data.get("level")}
     - Score: {student_data.get("score")}
+    - Study Hours: {student_data.get("study_hours")}
+    - Attendance: {student_data.get("attendance")}
 
     Task:
     Create a structured 5-day study plan.
 
     Rules:
-    - Return ONLY valid JSON
-    - No explanation
-    - No text outside JSON
+    - Weak → basics + repetition
+    - Medium → practice + understanding
+    - Strong → advanced problems
+
+    Return ONLY valid JSON.
+    Do NOT include markdown.
 
     Format:
+    [
     {{
-    "plan": [
-        {{
         "day": "Day 1",
-        "topics": ["topic1", "topic2"],
-        "tasks": ["task1", "task2"]
-        }}
-    ]
+        "topics": ["Topic 1", "Topic 2"],
+        "tasks": ["Task 1", "Task 2"]
     }}
+    ]
     """
 
-    response = ask_groq_json(prompt, context="")
+    response = ask_groq_json(prompt, context=context)
 
-    import json
     try:
-        return json.loads(response)
+        # Clean the reply from ```json
+        clean = re.sub(r"```json|```", "", response).strip()
+        plan = json.loads(clean)
     except Exception as e:
         print("PLAN ERROR:", e)
-        return {
-            "plan": [
-                {
-                    "day": "Day 1",
-                    "topics": ["Retry"],
-                    "tasks": ["Failed to generate plan"]
-                }
-            ]
-        }
+        print("RAW RESPONSE:", response)  # debugging
+        plan = [
+            {
+                "day": "Day 1",
+                "topics": ["Retry"],
+                "tasks": ["Failed to generate plan"]
+            }
+        ]
+
+    return {
+        "plan": plan
+    }
