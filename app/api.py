@@ -28,6 +28,8 @@ from app.analyze.store import get_profile
 # Prediction service
 from app.prediction.router import router as prediction_router
 
+# Study Planner Agent
+from app.agent.router import router as agent_router
 import requests
 
 
@@ -316,3 +318,4 @@ def build_rag(force: bool = False):
 app.include_router(quiz_router)
 app.include_router(analyze_router)
 app.include_router(prediction_router)
+app.include_router(agent_router)
