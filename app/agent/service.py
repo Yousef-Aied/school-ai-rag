@@ -32,10 +32,10 @@ def generate_study_plan(student_id: int, student_data: dict):
     context = retrieve_context(
         vs,
         subject = student_data.get("subject", "math"),
-        query = f"""
+        query=f"""
         {student_data.get('level')} student
         score {student_data.get('score')}
-        math weaknesses study plan
+        weak topics and study plan
         """,
         k=5
     )
@@ -73,16 +73,21 @@ def generate_study_plan(student_id: int, student_data: dict):
     }}
     ]
     """
-
     response = ask_groq_json(prompt, context=context)
 
-    try:
-        # Clean the reply from ```json
-        clean = re.sub(r"```json|```", "", response).strip()
-        plan = json.loads(clean)
-    except Exception as e:
-        print("PLAN ERROR:", e)
-        print("RAW RESPONSE:", response)  # debugging
+    plan = parse_plan(response)
+
+    # retry
+    if not plan:
+        print("Retrying plan generation...")
+        response2 = ask_groq_json(
+            prompt + "\nIMPORTANT: Return ONLY JSON array.",
+            context=context
+        )
+        plan = parse_plan(response2)
+
+    # fallback
+    if not plan:
         plan = [
             {
                 "day": "Day 1",
@@ -91,6 +96,22 @@ def generate_study_plan(student_id: int, student_data: dict):
             }
         ]
 
-    return {
-        "plan": plan
-    }
+
+def parse_plan(response: str):
+    try:
+        clean = re.sub(r"```json|```", "", response).strip()
+        data = json.loads(clean)
+
+        if not isinstance(data, list):
+            raise ValueError("Plan must be a list")
+
+        for day in data:
+            if not all(k in day for k in ["day", "topics", "tasks"]):
+                raise ValueError("Invalid structure")
+
+        return data
+
+    except Exception as e:
+        print("PLAN PARSE ERROR:", e)
+        print("RAW:", response)
+        return None

@@ -17,13 +17,14 @@ def get_student_data(student_id):
             params={"studentId": student_id},
             timeout=10
         )
+
         res.raise_for_status()
+
         return res.json()
+
     except Exception as e:
         print("DOTNET ERROR:", e)
         return None
-
-
 
 @router.get("/study-plan", response_model=StudyPlanResponse)
 def study_plan(student_id: int):
