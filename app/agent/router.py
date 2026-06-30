@@ -50,4 +50,8 @@ def study_plan(student_id: int):
         "exam_score": data["metrics"]["examScore"]
     }
 
+    print("FETCHING STUDENT:", student_id)
+    data = get_student_data(student_id)
+    print("DATA FROM DOTNET:", data)
+    
     return generate_study_plan(student_id, student_data)

@@ -27,18 +27,25 @@ def get_vectorstore():
 
 def generate_study_plan(student_id: int, student_data: dict):
 
-    vs = get_vectorstore()
+    try:
+        vs = get_vectorstore()
+    except Exception as e:
+        print("VECTORSTORE ERROR:", e)
+        vs = None
 
-    context = retrieve_context(
-        vs,
-        subject = student_data.get("subject", "math"),
-        query=f"""
-        {student_data.get('level')} student
-        score {student_data.get('score')}
-        weak topics and study plan
-        """,
-        k=5
-    )
+    if vs:
+        context = retrieve_context(
+            vs,
+            subject=student_data.get("subject", "math"),
+            query=f"""
+            {student_data.get('level')} student
+            score {student_data.get('score')}
+            math weaknesses study plan
+            """,
+            k=5
+        )
+    else:
+        context = ""
     
     # prompt
     prompt = f"""
@@ -95,6 +102,9 @@ def generate_study_plan(student_id: int, student_data: dict):
                 "tasks": ["Failed to generate plan"]
             }
         ]
+        
+    print("STUDENT DATA:", student_data)
+    print("CONTEXT:", context[:200] if context else "EMPTY")
 
 
 def parse_plan(response: str):
