@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 from app.agent.service import generate_study_plan
-from app.api import vectorstore
+from app.rag.indexer import build_or_load_vectorstore
+from app.prediction.service import predict
 
 router = APIRouter(prefix="/api/agent", tags=["Agent"])
 
 
 @router.get("/study-plan")
 def study_plan(student_id: int):
-    
-    # TEMP DATA
+
     student_data = {
         "age": 15,
         "gender": "male",
@@ -21,4 +21,9 @@ def study_plan(student_id: int):
         "study_method": "self"
     }
 
-    return generate_study_plan(student_id, student_data, vectorstore)
+    prediction = predict(student_data)
+
+    student_data["level"] = prediction["level"]
+    student_data["score"] = prediction["predicted_score"]
+
+    return generate_study_plan(student_id, student_data)
