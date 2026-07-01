@@ -105,6 +105,10 @@ def generate_study_plan(student_id: int, student_data: dict):
         
     print("STUDENT DATA:", student_data)
     print("CONTEXT:", context[:200] if context else "EMPTY")
+    
+    return {
+    "plan": plan
+    }
 
 
 def parse_plan(response: str):

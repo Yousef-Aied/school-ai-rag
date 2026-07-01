@@ -10,3 +10,9 @@ class DayPlan(BaseModel):
 
 class StudyPlanResponse(BaseModel):
     plan: List[DayPlan]
+    
+class StudyPlanInput(BaseModel):
+    level: str
+    score: float
+    study_hours: float
+    attendance: float
