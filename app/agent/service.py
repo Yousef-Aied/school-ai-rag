@@ -33,50 +33,80 @@ def generate_study_plan(student_id: int, student_data: dict):
         print("VECTORSTORE ERROR:", e)
         vs = None
 
+    context = ""
+
     if vs:
         context = retrieve_context(
             vs,
-            subject=student_data.get("subject", "math"),
             query=f"""
-            {student_data.get('level')} student
-            score {student_data.get('score')}
-            math weaknesses study plan
+            Student Level: {student_data.get('level')}
+            Predicted Score: {student_data.get('score')}
+            Study Hours: {student_data.get('study_hours')}
+            Attendance: {student_data.get('attendance')}
+
+            Retrieve study strategies, learning techniques,
+            revision methods, and educational recommendations
+            appropriate for this student's overall performance.
             """,
             k=5
-        )
-    else:
-        context = ""
+        ) or ""
     
-    # prompt
+    # prompt 
     prompt = f"""
-    You are an AI study planner.
+    You are an AI study planner acting like a real teacher.
 
-    Study material:
-    {context}
-
-    Student:
+    Student Information:
     - Level: {student_data.get("level")}
-    - Score: {student_data.get("score")}
+    - Predicted Score: {student_data.get("score")}
     - Study Hours: {student_data.get("study_hours")}
     - Attendance: {student_data.get("attendance")}
 
-    Task:
-    Create a structured 5-day study plan.
+    Your task:
+    Create a 5-day study plan that feels like a real school study schedule.
 
-    Rules:
-    - Weak → basics + repetition
-    - Medium → practice + understanding
-    - Strong → advanced problems
+    IMPORTANT STYLE RULES:
+    - Do NOT give overly specific numeric tasks (like "solve 10 problems")
+    - Do NOT list exact formulas or detailed subtopics
+    - Instead, refer to lessons in a natural way:
+    ✔ "Review lesson 1 and 2"
+    ✔ "Focus on weak parts of the chapter"
+    ✔ "Revise previous exercises"
+    ✔ "Study the important concepts from the unit"
+    - Make the plan feel realistic and human-like
 
-    Return ONLY valid JSON.
-    Do NOT include markdown.
+    SUBJECT RULES:
+    - Cover: Mathematics, Physics, Chemistry, English
+    - Distribute subjects across the days
+    - Each day should include 2–3 subjects (not all 4 every day)
 
-    Format:
+    PERSONALIZATION:
+    - Weak → more revision + repeating lessons
+    - Medium → mix of revision + practice
+    - Strong → deeper understanding + challenging parts
+
+    TASK STYLE:
+    - Use phrases like:
+    - "Review"
+    - "Revise"
+    - "Focus on"
+    - "Practice key exercises"
+    - "Study important parts"
+    - Avoid robotic instructions
+
+    OUTPUT RULES:
+    - Return ONLY valid JSON
+    - No explanations
+    - No markdown
+
+    FORMAT:
     [
     {{
         "day": "Day 1",
-        "topics": ["Topic 1", "Topic 2"],
-        "tasks": ["Task 1", "Task 2"]
+        "topics": ["Algebra", "Newton's Laws"],
+        "tasks": [
+        "Review lesson 1 and 2 in Algebra",
+        "Focus on understanding the main ideas in Newton's Laws"
+        ]
     }}
     ]
     """
