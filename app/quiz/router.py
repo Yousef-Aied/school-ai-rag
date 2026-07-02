@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/quiz", tags=["quiz"])
 
 # use the same vectorstore
-BASE_DIR = Path(__file__).resolve().parent.parent.parent  # project root raw2
+BASE_DIR = Path(__file__).resolve().parent.parent.parent  # project root raw2 .conversation_id.strip()
 PDF_DIR = BASE_DIR / "data" / "pdfs"
 
 
@@ -161,35 +161,20 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
 
 @router.post("/generate", response_model=GenerateQuizResponse)
 def generate_quiz(payload: GenerateQuizRequest):
-    if payload.topic and payload.topic.strip().lower() == "string":
-        raise HTTPException(
-            status_code=400,
-            detail="Please provide a valid topic."
-        )
 
-    if payload.grade is not None:
-        if not validate_topic_exists(payload.grade, payload.topic):
-            raise HTTPException(
-                status_code=404,
-                detail=f"No study material found for Grade {payload.grade}, Topic '{payload.topic}'."
-            )
-        
-    if (
-        payload.conversation_id
-        and payload.conversation_id.strip().lower() == "string"
-    ):
+    if not validate_topic_exists(payload.grade, payload.topic):
         raise HTTPException(
-            status_code=400,
-            detail="Please provide a valid conversation ID."
+            status_code=404,
+            detail=f"No study material found for Grade {payload.grade}, Topic '{payload.topic}'."
         )
-        
+         
     vs = get_vectorstore()
 
-    topic = payload.topic or "the study material"
+    payload.topic
     # retrieve context from RAG: either from topic or from "last topic"
     context = retrieve_context(
             vs,
-            topic,
+            query=payload.topic,
             k=12,
             grade=payload.grade,
             subject=payload.topic,
@@ -201,7 +186,11 @@ def generate_quiz(payload: GenerateQuizRequest):
             detail="No study material found."
         )
 
-    items = generate_mcq_json(topic, context, payload.n_questions)
+    items = generate_mcq_json(
+        payload.topic,
+        context,
+        payload.n_questions,
+    )
 
     quiz_id = f"qz_{uuid.uuid4().hex[:10]}"
     store = load_store()
@@ -239,7 +228,7 @@ def generate_quiz(payload: GenerateQuizRequest):
         "student_id": payload.student_id,
         "conversation_id": payload.conversation_id,
         "created_at": int(time.time()),
-        "topic": topic,
+        "topic": payload.topic,
         "questions": questions_internal,
     }
     save_store(store)
@@ -274,7 +263,10 @@ def submit_quiz(payload: SubmitQuizRequest):
     for ans in payload.answers:
         q = qmap.get(ans.question_id)
         if not q:
-            continue
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unknown question_id: {ans.question_id}",
+            )
         answered += 1
         is_correct = ans.selected_index == q["correct_index"]
         if is_correct:
@@ -343,18 +335,6 @@ def get_quiz(quiz_id: str):
 # createTeacherQuizAssignment API
 @router.post("/template/generate", response_model=QuizTemplateGenerateResponse)
 def generate_quiz_template(payload: QuizTemplateGenerateRequest):
-    if payload.subject and payload.subject.strip().lower() == "string":
-        raise HTTPException(
-            status_code=400,
-            detail="Please provide a valid subject."
-        )
-
-    if payload.topic.strip().lower() == "string":
-        raise HTTPException(
-            status_code=400,
-            detail="Please provide a valid topic."
-        )
-        
     if payload.grade_level is not None and payload.subject:
         if not validate_topic_exists(
             payload.grade_level,
@@ -373,6 +353,12 @@ def generate_quiz_template(payload: QuizTemplateGenerateRequest):
     context = retrieve_context(
         vs, topic, k=12, grade=payload.grade_level, subject=payload.subject
     )
+    
+    if not context:
+        raise HTTPException(
+            status_code=404,
+            detail="No study material found for the selected subject."
+        )
 
     # context = retrieve_context(vs, topic, k=6) 
 

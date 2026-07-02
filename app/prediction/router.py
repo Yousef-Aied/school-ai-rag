@@ -11,13 +11,15 @@ from app.common.enums import (
     StudyMethod,
     TravelTime,
 )
+from pydantic import field_validator
+from app.common.validators import validate_text
 
 router = APIRouter(prefix="/api/predict", tags=["Prediction"])
 
 
 class PredictionInput(BaseModel):
 
-    age: int = Field(..., ge=5, le=100)
+    age: int = Field(..., ge=5, le=25)
 
     gender: Gender
 
@@ -35,6 +37,19 @@ class PredictionInput(BaseModel):
 
     study_method: StudyMethod
 
+    @field_validator(
+        "gender",
+        "school_type",
+        "internet_access",
+        "travel_time",
+        "extra_activities",
+        "study_method",
+        mode="before",
+    )
+    @classmethod
+    def validate_strings(cls, value):
+        return validate_text(value)
+    
 @router.post("/performance")
 def predict_performance(payload: PredictionInput):
     return predict(payload.dict())

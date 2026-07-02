@@ -24,6 +24,8 @@ def get_student_data(student_id):
         res.raise_for_status()
 
         data = res.json()
+        logger.info("Dashboard response: %s", data)
+        
         # Response Validation
         if "prediction" not in data or "metrics" not in data:
             logger.error(
@@ -33,11 +35,22 @@ def get_student_data(student_id):
         
         prediction = data["prediction"]
         metrics = data["metrics"]
+        if prediction is None or metrics is None:
+            logger.error(
+                "Invalid response from .NET API: prediction or metrics is null"
+            )
+            return None
         
-        score = prediction["predictedScore"]
-        attendance = metrics["attendance"]
-        study_hours = metrics["studyHours"]
-
+        score = prediction.get("predictedScore")
+        attendance = metrics.get("attendance")
+        study_hours = metrics.get("studyHours")
+        
+        if score is None or attendance is None or study_hours is None:
+            logger.error(
+                "Missing required values in prediction/metrics"
+            )
+            return None
+        
         # Business/Data Validation
         if not (0 <= score <= 100):
             logger.error("Invalid predicted score: %s", score)

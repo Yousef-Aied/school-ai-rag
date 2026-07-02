@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from pydantic import Field
 from pydantic import field_validator
 from app.common.validators import validate_text
 
@@ -72,15 +71,13 @@ class SubmitQuizResponse(BaseModel):
 
 
 # ===============================
-# createTeacherQuizAssignment API
+# createTeacherQuizAssignment APIunits
 class QuizTemplateGenerateRequest(BaseModel):
-    topic: str = Field(..., min_length=2)
     grade_level: int = Field(..., ge=1, le=12)
     subject: str = Field(..., min_length=2)
     number_of_questions: int = Field(default=10, ge=1, le=50)
     units: list[str] = Field(default_factory=list)
     @field_validator(
-        "topic",
         "subject",
         mode="before",
     )
