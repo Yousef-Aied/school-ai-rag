@@ -5,6 +5,8 @@ from app.common.enums import (
     EngagementLevel,
     LearningStyle,
 )
+from pydantic import field_validator
+from app.common.validators import validate_text
 
 Role = Literal["user", "assistant", "system"]
 
@@ -15,6 +17,11 @@ class ChatMsg(BaseModel):
         min_length=1,
     )
     ts: Optional[int] = None
+    
+    @field_validator("content", mode="before")
+    @classmethod
+    def validate_content(cls, value):
+        return validate_text(value)
 
 
 class AnalyzeChatRequest(BaseModel):
@@ -25,6 +32,14 @@ class AnalyzeChatRequest(BaseModel):
     # optional context
     grade: Optional[int] = Field(default=None, ge=1, le=12)
     subject: Optional[str] = "auto"
+    @field_validator(
+        "conversation_id",
+        "subject",
+        mode="before",
+    )
+    @classmethod
+    def validate_strings(cls, value):
+        return validate_text(value)
 
 
 class AnalyzeChatResponse(BaseModel):

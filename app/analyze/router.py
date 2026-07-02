@@ -2,6 +2,9 @@ from fastapi import APIRouter, HTTPException
 from app.analyze.schemas import AnalyzeChatRequest, AnalyzeChatResponse
 from app.analyze.service import analyze_chat
 from app.analyze.store import save_profile
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["analyze"])
 
@@ -15,15 +18,15 @@ def analyze_chat_endpoint(req: AnalyzeChatRequest):
     try:
         result = analyze_chat(messages=[m.model_dump() for m in req.messages])
 
-    except Exception as e:
-        print("ANALYZE ERROR:", e)
+    except Exception:
+        logger.exception("Failed to analyze chat")
 
         result = {
             "understanding_level": "medium",
             "learning_style": "step_by_step",
             "engagement": "medium",
             "confusion_points": [],
-            "needs_examples": True
+            "needs_examples": True,
         }
 
     profile = {

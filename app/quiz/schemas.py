@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from pydantic import Field
+from pydantic import field_validator
+from app.common.validators import validate_text
 
 # This is just the “data forms” going/coming back from the API (so that there is a clear Contract for the team).
 class GenerateQuizRequest(BaseModel):
@@ -23,6 +25,16 @@ class GenerateQuizRequest(BaseModel):
         ...,
         min_length=2
     )
+    @field_validator(
+        "conversation_id",
+        "message",
+        "student_name",
+        mode="before",
+    )
+    @classmethod
+    def validate_strings(cls, value):
+        return validate_text(value)
+
 class QuizQuestionPublic(BaseModel):
     question_id: str
     question_text: str
@@ -68,6 +80,14 @@ class QuizTemplateGenerateRequest(BaseModel):
     subject: str = Field(..., min_length=2)
     number_of_questions: int = Field(default=10, ge=1, le=50)
     units: list[str] = Field(default_factory=list)
+    @field_validator(
+        "topic",
+        "conversation_id",
+        mode="before",
+    )
+    @classmethod
+    def validate_strings(cls, value):
+        return validate_text(value)
 
 class QuizTemplateQuestionPublic(BaseModel):
     question_id: str

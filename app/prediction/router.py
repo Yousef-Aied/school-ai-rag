@@ -23,7 +23,7 @@ class PredictionInput(BaseModel):
 
     school_type: SchoolType
 
-    study_hours: float = Field(..., ge=0)
+    study_hours: float = Field(..., ge=0, le=10)
 
     attendance_percentage: float = Field(..., ge=0, le=100)
 

@@ -34,6 +34,14 @@ from app.agent.router import router as agent_router
 
 from app.common.enums import StudentLevel
 
+from pydantic import field_validator
+
+from app.common.validators import (
+    validate_text,
+    validate_positive_id,
+    validate_grade,
+    validate_score,
+)
 import logging
 
 logging.basicConfig(
@@ -218,6 +226,43 @@ class ChatRequest(BaseModel):
         ge=0,
         le=100
     )
+    
+    @field_validator(
+        "conversation_id",
+        "message",
+        "student_name",
+        mode="before",
+    )
+    @classmethod
+    def validate_text_fields(cls, value):
+        return validate_text(value)
+
+
+    @field_validator(
+        "student_id",
+        mode="before",
+    )
+    @classmethod
+    def validate_student_id(cls, value):
+        return validate_positive_id(value)
+
+
+    @field_validator(
+        "grade",
+        mode="before",
+    )
+    @classmethod
+    def validate_grade_field(cls, value):
+        return validate_grade(value)
+
+
+    @field_validator(
+        "predicted_score",
+        mode="before",
+    )
+    @classmethod
+    def validate_score_field(cls, value):
+        return validate_score(value)
 
 
 class ChatResponse(BaseModel):
