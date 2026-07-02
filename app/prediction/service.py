@@ -2,8 +2,10 @@ import joblib
 import requests
 import pandas as pd
 from pathlib import Path
-from app.llm.groq_client import ask_groq
 from app.llm.groq_client import ask_groq_json
+import logging
+
+logger = logging.getLogger(__name__)
 
 # drive
 # rf_regressor.pkl = https://drive.google.com/file/d/1EqNp1gTeWRX8LPyq7MJ7m-tP4rhh8i0w/view?usp=sharing
@@ -29,21 +31,22 @@ MODEL_DIR = BASE_DIR / "models"
 def download_file(url, path):
 
     if path.exists() and path.stat().st_size > 1000000:
-        print(f"{path.name} already exists")
+        logger.info(f"{path.name} already exists")
         return
 
-    print(f"Downloading {path.name}...")
+    logger.info(f"Downloading {path.name}...")
 
     r = requests.get(url, stream=True, timeout=60)
 
     if r.status_code != 200:
-        raise Exception(f"Download failed: {r.status_code}")
+        logger.error("Failed to download model: %s", url)
+        raise RuntimeError(f"Download failed: {r.status_code}")
 
     with open(path, "wb") as f:
         for chunk in r.iter_content(8192):
             f.write(chunk)
 
-    print(f"Downloaded: {path.stat().st_size} bytes")
+    logger.info(f"Downloaded: {path.stat().st_size} bytes")
 
 
 # -----------------------------------
@@ -55,7 +58,7 @@ def load_models():
     if reg_model is not None and cls_model is not None:
         return
 
-    print("Loading models...")
+    logger.info("Loading prediction models")
 
     MODEL_DIR.mkdir(exist_ok=True)
 
@@ -70,17 +73,26 @@ def load_models():
 
     reg_model = joblib.load(reg_path)
     cls_model = joblib.load(cls_path)
+    
+    if reg_model is None or cls_model is None:
+        logger.error("Failed to load prediction models")
+        raise RuntimeError("Prediction models not loaded")
 
-    print("Models loaded once")
+    logger.info("Prediction models loaded successfully")
 
 # -----------------------------------
 # PREPROCESS
 # -----------------------------------
 def preprocess_input(data: dict):
     if reg_model is None or cls_model is None:
-        raise Exception("Models not loaded")
+        logger.error("Prediction models are unavailable")
+        raise RuntimeError("Prediction models not loaded")
 
     df = pd.DataFrame([data])
+    
+    if df.empty:
+        logger.error("Input dataframe is empty")
+        raise ValueError("No prediction data provided")
 
     df = pd.get_dummies(df)
 
@@ -96,11 +108,19 @@ def preprocess_input(data: dict):
 def predict(data: dict):
     load_models()
     if reg_model is None or cls_model is None:
-        return {"error": "Models not loaded"}
+        logger.error("Prediction models are unavailable")
+        raise RuntimeError("Prediction models not loaded")
 
     df_reg, df_cls = preprocess_input(data)
 
     score = reg_model.predict(df_reg)[0]
+    
+    if not (0 <= score <= 100):
+        logger.warning(
+            "Predicted score out of expected range: %.2f",
+            score,
+        )
+        
     level_raw = cls_model.predict(df_cls)[0]
 
     label_map = {0: "Weak", 1: "Medium", 2: "Strong"}
@@ -155,14 +175,24 @@ def generate_insights_with_llm(data: dict, score: float, level: str):
     """
 
     response = ask_groq_json(prompt, context="")
+    
+    if not response:
+        logger.error("LLM returned empty insights response")
+
+        return [
+            {
+                "title": "AI Insight",
+                "text": "No insights generated."
+            }
+        ]
 
     try:
         import json
 
         insights = json.loads(response)
-    except Exception as e:
-        print("JSON ERROR:", e)
-        print("RAW RESPONSE:", response)
+    except Exception:
+        logger.exception("Failed to parse AI insights")
+        logger.debug("Raw AI response: %s", response)
 
         insights = [{"title": "AI Insight", "text": "Failed to parse insights"}]
 
@@ -175,7 +205,8 @@ def generate_insights_with_llm(data: dict, score: float, level: str):
 def explain_prediction(data: dict):
     load_models()
     if reg_model is None or cls_model is None:
-        return {"error": "Models not loaded"}
+        logger.error("Prediction models are unavailable")
+        raise RuntimeError("Prediction models not loaded")
 
     df_reg, df_cls = preprocess_input(data)
 
@@ -188,6 +219,9 @@ def explain_prediction(data: dict):
 
     # if/else => LLM
     insights = generate_insights_with_llm(data, score, level)
+    
+    if not insights:
+        logger.warning("No AI insights generated")
 
     return {
         "predicted_score": round(float(score), 2),

@@ -4,6 +4,9 @@ from app.llm.groq_client import ask_groq_json
 from pathlib import Path
 import json
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 _vectorstore = None 
 
@@ -29,8 +32,8 @@ def generate_study_plan(student_id: int, student_data: dict):
 
     try:
         vs = get_vectorstore()
-    except Exception as e:
-        print("VECTORSTORE ERROR:", e)
+    except Exception:
+        logger.exception("Failed to load vectorstore")
         vs = None
 
     context = ""
@@ -51,6 +54,19 @@ def generate_study_plan(student_id: int, student_data: dict):
             k=5
         ) or ""
     
+    # LLM Input Validation
+    if not context:
+        logger.warning(
+            "Empty context for student_id=%d",
+            student_id,
+        )
+
+    elif len(context) < 100:
+        logger.warning(
+            "Weak context (%d chars) for student_id=%d",
+            len(context),
+            student_id,
+        )
     # prompt 
     prompt = f"""
     You are an AI study planner acting like a real teacher.
@@ -110,21 +126,34 @@ def generate_study_plan(student_id: int, student_data: dict):
     }}
     ]
     """
+    
     response = ask_groq_json(prompt, context=context)
+    
+    if not response:
+        logger.error("LLM returned an empty response")
+
+        return {
+            "plan": []
+        }
 
     plan = parse_plan(response)
 
     # retry
     if not plan:
-        print("Retrying plan generation...")
+        logger.warning("Retrying study plan generation")
         response2 = ask_groq_json(
             prompt + "\nIMPORTANT: Return ONLY JSON array.",
             context=context
         )
-        plan = parse_plan(response2)
+
+        if response2:
+            plan = parse_plan(response2)
+        else:
+            logger.error("Retry returned empty response")
 
     # fallback
     if not plan:
+        logger.error("Failed to generate study plan for student_id=%d", student_id)
         plan = [
             {
                 "day": "Day 1",
@@ -133,8 +162,15 @@ def generate_study_plan(student_id: int, student_data: dict):
             }
         ]
         
-    print("STUDENT DATA:", student_data)
-    print("CONTEXT:", context[:200] if context else "EMPTY")
+    logger.info(
+        "Study plan generated for student_id=%d",
+        student_id,
+    )
+
+    logger.debug(
+        "Context preview: %s",
+        context[:200] if context else "EMPTY",
+    )
     
     return {
     "plan": plan
@@ -155,7 +191,8 @@ def parse_plan(response: str):
 
         return data
 
-    except Exception as e:
-        print("PLAN PARSE ERROR:", e)
-        print("RAW:", response)
+    except Exception:
+        logger.exception("Failed to parse study plan")
+
+        logger.debug("Raw response: %s", response)
         return None

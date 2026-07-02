@@ -1,5 +1,8 @@
 from typing import Dict, Any, Optional
+import logging
 
+
+logger = logging.getLogger(__name__)
 # retriever.py: Searches accurately using filters (Grade and Subject)
 
 def retrieve_context(
@@ -10,7 +13,7 @@ def retrieve_context(
     subject: str | None = None,
 ) -> str:
     clauses = []
-
+    
     if subject and subject != "auto":
         clauses.append({"subject": subject.lower()})
 
@@ -30,10 +33,31 @@ def retrieve_context(
     if filter_dict:
         search_kwargs["filter"] = filter_dict
 
+    if vectorstore is None:
+        logger.error("Vectorstore is not initialized")
+        return ""
+
     docs = vectorstore.similarity_search(query, **search_kwargs)
 
+    # Retrieval Validation
     if not docs:
+        logger.warning(
+            "No documents retrieved | query='%s' | grade=%s | subject=%s",
+            query,
+            grade,
+            subject,
+        )
         return ""
+
+    if len(docs) < k:
+        logger.warning(
+            "Weak retrieval | expected=%d | retrieved=%d | query='%s'",
+            k,
+            len(docs),
+            query,
+        )
+
+    logger.info("Retrieved %d documents", len(docs))
 
     formatted_docs = []
     for d in docs:
@@ -42,5 +66,7 @@ def retrieve_context(
         
         formatted_text = f"Source: {source} (Page {page})\nContent: {d.page_content}"
         formatted_docs.append(formatted_text)
+        
+    
 
     return "\n\n---\n\n".join(formatted_docs)

@@ -1,8 +1,9 @@
 # API
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pathlib import Path
 from typing import Optional
 
@@ -30,8 +31,14 @@ from app.prediction.router import router as prediction_router
 
 # Study Planner Agent
 from app.agent.router import router as agent_router
-import requests
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 # -----------------------------
 # STYLE BUILDER (clean)
@@ -65,12 +72,59 @@ def build_style_hint(profile: dict | None, student_name: str | None = None) -> s
     return hint
 
 
-# -----------------------------
-# APP
-# -----------------------------
+
 
 app = FastAPI(title="School AI RAG API")
 
+# -----------------------------
+# GLOBAL EXCEPTION HANDLERS
+# -----------------------------
+
+@app.exception_handler(RuntimeError)
+async def runtime_exception_handler(request: Request, exc: RuntimeError):
+    logger.exception("Runtime error")
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "error": "RuntimeError",
+            "message": str(exc),
+        },
+    )
+
+
+@app.exception_handler(ValueError)
+async def value_exception_handler(request: Request, exc: ValueError):
+    logger.exception("Validation error")
+
+    return JSONResponse(
+        status_code=400,
+        content={
+            "success": False,
+            "error": "ValueError",
+            "message": str(exc),
+        },
+    )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled exception")
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "error": "InternalServerError",
+            "message": "Unexpected server error.",
+        },
+    )
+    
+
+# -----------------------------
+# APP
+# -----------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -103,7 +157,7 @@ def build_index_if_needed():
 
         # If there are no PDFs → don't build
         if not PDF_DIR.exists() or not any(PDF_DIR.iterdir()):
-            print("No PDFs found → skipping RAG")
+            logger.warning("No PDFs found. Skipping RAG initialization.")
             return None
 
         docs = load_pdfs(str(PDF_DIR))
@@ -113,8 +167,8 @@ def build_index_if_needed():
             chunks=chunks, persist_dir=str(VECTORSTORE_DIR)
         )
 
-    except Exception as e:
-        print("RAG build failed:", e)
+    except Exception:
+        logger.exception("Failed to build RAG index")
         return None
 
 
@@ -136,7 +190,7 @@ def root():
 #     try:
 #         vectorstore = build_index_if_needed()
 #     except Exception as e:
-#         print("Vectorstore init failed:", e)
+#         logger.exception("Failed to initialize vectorstore")
 #         vectorstore = None
 
 #     # Download the model once
@@ -147,8 +201,9 @@ def root():
 # CHAT context
 # -----------------------------
 class ChatRequest(BaseModel):
-    conversation_id: str
-    message: str
+    conversation_id: str = Field(..., min_length=1)
+
+    message: str = Field(..., min_length=1)
 
     student_id: Optional[int] = None
     student_name: Optional[str] = None
@@ -168,10 +223,15 @@ class ChatResponse(BaseModel):
 # Strong → Advanced + deeper
 @app.post("/api/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
+    logger.info(
+        "Chat request | conversation=%s | student=%s",
+        req.conversation_id,
+        req.student_id,
+    )
     global vectorstore
 
     if vectorstore is None:
-        print("Building vectorstore lazily...")
+        logger.info("Building vectorstore lazily")
         vectorstore = build_index_if_needed()
 
     if vectorstore:
@@ -207,7 +267,7 @@ def chat(req: ChatRequest):
 
     # 3 load profile
     profile = get_profile(req.student_id) if req.student_id else None
-    print("PROFILE:", profile)
+    logger.debug("Student profile: %s", profile)
 
     # student_level = req.student_level or "Medium"
 
@@ -281,8 +341,22 @@ def chat(req: ChatRequest):
     {req.message}
     """
     
+    if not full_question.strip():
+        logger.error("Question sent to LLM is empty")
+
+        return {
+            "answer": "Empty question."
+        }
+    
     # answer = ask_groq(req.message, context, style_hint=style_hint)
     answer = ask_groq(full_question, context, style_hint=style_hint)
+    
+    if not answer:
+        logger.error("LLM returned empty answer")
+
+        return {
+            "answer": "No response generated."
+        }
 
     return {"answer": answer}
 
@@ -298,7 +372,7 @@ def build_rag(force: bool = False):
         return {"status": "Already built"}
 
     try:
-        print("Building vectorstore manually...")
+        logger.info("Building vectorstore manually")
 
         vectorstore = build_index_if_needed()
 
@@ -308,7 +382,7 @@ def build_rag(force: bool = False):
         return {"status": "RAG built successfully"}
 
     except Exception as e:
-        print("Build failed:", e)
+        logger.error("Build failed: %s", e)
         return {"status": "error", "message": str(e)}
 
 

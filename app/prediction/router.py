@@ -1,22 +1,25 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
 from app.prediction.service import predict
 from app.prediction.service import predict, explain_prediction
+from pydantic import BaseModel, Field
 
 router = APIRouter(prefix="/api/predict", tags=["Prediction"])
 
 
 class PredictionInput(BaseModel):
-    age: int
+    age: int = Field(..., ge=5, le=100)
     gender: str
     school_type: str
-    study_hours: float
-    attendance_percentage: float
+
+    study_hours: float = Field(..., ge=0)
+    attendance_percentage: float = Field(..., ge=0, le=100)
+
     internet_access: str
-    travel_time: float
+
+    travel_time: float = Field(..., ge=0)
+
     extra_activities: str
     study_method: str
-
 
 @router.post("/performance")
 def predict_performance(payload: PredictionInput):

@@ -1,6 +1,9 @@
 import json
 from pathlib import Path
 from typing import Any, Dict
+import logging
+
+logger = logging.getLogger(__name__)
 
 # This is a simple “JSON repository” instead of a DB.
 BASE_DIR = Path(__file__).resolve().parent.parent  # app/
@@ -21,11 +24,30 @@ def _default_store() -> Dict[str, Any]:
 
 def load_store() -> Dict[str, Any]:
     if not STORE_PATH.exists():
+        logger.info("Creating new quiz store")
+
         data = _default_store()
         save_store(data)
+
         return data
 
-    data = json.loads(STORE_PATH.read_text(encoding="utf-8"))
+    try:
+        data = json.loads(STORE_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        logger.exception("quiz_store.json is corrupted")
+
+        data = _default_store()
+        save_store(data)
+
+        return data
+    
+    if not isinstance(data, dict):
+        logger.error("quiz_store.json does not contain a JSON object")
+
+        data = _default_store()
+        save_store(data)
+
+        return data
 
     if "quizzes" not in data:
         data["quizzes"] = {}
@@ -43,7 +65,14 @@ def load_store() -> Dict[str, Any]:
 
 
 def save_store(data: Dict[str, Any]) -> None:
-    STORE_PATH.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2),
-        encoding="utf-8"
-    )
+    try:
+        STORE_PATH.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+
+        logger.debug("Quiz store saved successfully")
+
+    except Exception:
+        logger.exception("Failed to save quiz store")
+        raise

@@ -1,13 +1,27 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 
 # This is just the “data forms” going/coming back from the API (so that there is a clear Contract for the team).
 class GenerateQuizRequest(BaseModel):
-    student_id: int
-    conversation_id: Optional[str] = None
-    n_questions: int = 10
-    topic: Optional[str] = None  # optional
+    student_id: int = Field(..., gt=0)
 
+    grade: int = Field(..., ge=1, le=12)
+
+    conversation_id: Optional[str] = Field(
+        default=None,
+        min_length=1
+    )
+
+    n_questions: int = Field(
+        default=10,
+        ge=1,
+        le=20
+    )
+
+    topic: str = Field(
+        ...,
+        min_length=2
+    )
 class QuizQuestionPublic(BaseModel):
     question_id: str
     question_text: str
@@ -21,12 +35,12 @@ class GenerateQuizResponse(BaseModel):
 
 class SubmitAnswer(BaseModel):
     question_id: str
-    selected_index: int
+    selected_index: int = Field(..., ge=0, le=3)
 
 class SubmitQuizRequest(BaseModel):
-    quiz_id: str
-    student_id: int
-    started_at: Optional[str] = None  # ISO string اختياري
+    quiz_id: str = Field(..., min_length=1)
+    student_id: int = Field(..., gt=0)
+    started_at: Optional[str] = None  # ISO string
     submitted_at: Optional[str] = None
     answers: List[SubmitAnswer]
 
@@ -48,10 +62,10 @@ class SubmitQuizResponse(BaseModel):
 # ===============================
 # createTeacherQuizAssignment API
 class QuizTemplateGenerateRequest(BaseModel):
-    topic: str
-    grade_level: Optional[int] = None
-    subject: Optional[str] = None
-    number_of_questions: int = 10
+    topic: str = Field(..., min_length=2)
+    grade_level: int = Field(..., ge=1, le=12)
+    subject: str = Field(..., min_length=2)
+    number_of_questions: int = Field(default=10, ge=1, le=50)
     units: list[str] = []
 
 class QuizTemplateQuestionPublic(BaseModel):
@@ -65,7 +79,7 @@ class QuizTemplateGenerateResponse(BaseModel):
 
 class QuizTemplateSubmitAnswer(BaseModel):
     question_id: str
-    selected_index: int
+    selected_index: int = Field(..., ge=0, le=3)
 
 class QuizTemplateSubmitRequest(BaseModel):
     answers: List[QuizTemplateSubmitAnswer]

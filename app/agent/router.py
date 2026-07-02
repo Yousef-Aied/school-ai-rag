@@ -1,11 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from app.agent.schemas import StudyPlanResponse
 from app.agent.service import generate_study_plan
-from app.rag.indexer import build_or_load_vectorstore
-from app.prediction.service import predict
-from pydantic import BaseModel
 from app.agent.schemas import StudyPlanInput
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/agent", tags=["Agent"])
 
@@ -25,20 +24,45 @@ def get_student_data(student_id):
         res.raise_for_status()
 
         data = res.json()
+        # Response Validation
+        if "prediction" not in data or "metrics" not in data:
+            logger.error(
+                "Invalid response from .NET API: missing prediction or metrics"
+            )
+            return None
+        
+        prediction = data["prediction"]
+        metrics = data["metrics"]
+        
+        score = prediction["predictedScore"]
+        attendance = metrics["attendance"]
+        study_hours = metrics["studyHours"]
 
+        # Business/Data Validation
+        if not (0 <= score <= 100):
+            logger.error("Invalid predicted score: %s", score)
+            return None
+
+        if not (0 <= attendance <= 100):
+            logger.error("Invalid attendance: %s", attendance)
+            return None
+
+        if study_hours < 0:
+            logger.error("Invalid study hours: %s", study_hours)
+            return None
         return {
 
             "student_id": data["studentId"],
 
             "name": data["studentName"],
 
-            "level": data["prediction"]["level"],
+            "level": prediction["level"],
 
-            "score": data["prediction"]["predictedScore"],
+            "score": score,
 
-            "study_hours": data["metrics"]["studyHours"],
+            "study_hours": study_hours,
 
-            "attendance": data["metrics"]["attendance"],
+            "attendance": attendance,
 
             "subjects": [
                 "math",
@@ -49,9 +73,7 @@ def get_student_data(student_id):
         }
 
     except Exception as e:
-
-        print(e)
-
+        logger.exception("Failed to fetch student data from .NET API")
         return None
 
 
@@ -60,7 +82,12 @@ def study_plan(payload: StudyPlanInput):
 
     student = get_student_data(payload.student_id)
 
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
+    if student is None:
+        logger.warning("Study plan requested for invalid student_id=%d", payload.student_id)
+
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found or invalid student data."
+    )
 
     return generate_study_plan(payload.student_id, student)

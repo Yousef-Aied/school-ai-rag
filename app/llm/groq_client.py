@@ -1,10 +1,15 @@
 from dotenv import load_dotenv
+from sympy import content
 
 load_dotenv()
 
 import os
 from groq import Groq
 from groq.types.chat import ChatCompletionMessageParam
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 # Dynamic Prompt Engineering
 api_key = os.environ.get("GROQ_API_KEY")
@@ -15,6 +20,13 @@ client = Groq(api_key=api_key)
 
 # System Prompt or System Message
 def ask_groq(question: str, context: str, style_hint: str = "") -> str:
+    # Input Validation
+    if not question.strip():
+        raise ValueError("Question cannot be empty")
+
+    if context is None:
+        raise ValueError("Context cannot be None")
+    
     messages: list[ChatCompletionMessageParam] = [
         {
             "role": "system",
@@ -61,23 +73,37 @@ def ask_groq(question: str, context: str, style_hint: str = "") -> str:
         },
     ]
 
-    completion = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=messages,
-        temperature=0.4,
-        max_completion_tokens=700, #1500 | 2048
-        top_p=1,
-        stream=False,
-    )
-    
-    content = completion.choices[0].message.content
-    if content is None:
-        raise RuntimeError("Groq returned empty content")
+    try:
+        completion = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=messages,
+            temperature=0.4,
+            max_completion_tokens=700, #1500 | 2048
+            top_p=1,
+            stream=False,
+        )
 
+    except Exception:
+        logger.exception("Groq API request failed")
+        raise
+        
+    content = completion.choices[0].message.content
+
+    if not content:
+        logger.error("Groq returned empty content")
+        raise RuntimeError("Groq returned empty content")
+    
+    logger.info("Groq response generated successfully")
     return content
 
 
 def ask_groq_json(instruction: str, context: str) -> str:
+    # Input Validation
+    if not instruction.strip():
+        raise ValueError("Instruction cannot be empty")
+
+    if context is None:
+        raise ValueError("Context cannot be None")
     """
     Groq call that MUST return JSON only (for quiz generation).
     """
@@ -96,16 +122,26 @@ def ask_groq_json(instruction: str, context: str) -> str:
         },
     ]
 
-    completion = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=messages,
-        temperature=0.0,
-        max_completion_tokens=1500,
-        top_p=1,
-        stream=False,
-    )
+    try:
+        completion = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=messages,
+            temperature=0.0,
+            max_completion_tokens=1500,
+            top_p=1,
+            stream=False,
+        )
+
+    except Exception:
+        logger.exception("Groq JSON API request failed")
+        raise
 
     content = completion.choices[0].message.content
-    if content is None:
+
+    if not content:
+        logger.error("Groq returned empty JSON content")
         raise RuntimeError("Groq returned empty content")
+
+    logger.info("Groq JSON generated successfully")
+
     return content.strip()

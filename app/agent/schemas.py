@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import List, Dict
+from pydantic import BaseModel, Field
+from typing import List
 
 
 class DayPlan(BaseModel):
@@ -10,6 +10,11 @@ class DayPlan(BaseModel):
 
 class StudyPlanResponse(BaseModel):
     plan: List[DayPlan]
-    
+
+
 class StudyPlanInput(BaseModel):
-    student_id: int
+    student_id: int = Field(
+        ...,
+        gt=0,
+        description="Student ID must be greater than 0"
+    )

@@ -20,13 +20,23 @@ from app.rag.indexer import build_or_load_vectorstore
 from app.rag.retriever import retrieve_context
 from pathlib import Path
 from app.llm.groq_client import ask_groq_json
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/quiz", tags=["quiz"])
 
 # use the same vectorstore
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # project root raw2
-VECTORSTORE_DIR = BASE_DIR / "vectorstore"
+PDF_DIR = BASE_DIR / "data" / "pdfs"
 
+
+def validate_topic_exists(grade: int, topic: str) -> bool:
+    pdf_path = PDF_DIR / f"Grade_{grade}" / f"{topic.lower()}.pdf"
+    return pdf_path.exists()
+
+VECTORSTORE_DIR = BASE_DIR / "vectorstore"
 _vectorstore = None
 
 
@@ -141,8 +151,8 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
         try:
             return try_parse(raw2)
         except Exception as e:
-            print("RAW1:", raw1)
-            print("RAW2:", raw2)
+            logger.debug("RAW1: %s", raw1)
+            logger.debug("RAW2: %s", raw2)
             raise HTTPException(
                 status_code=500,
                 detail=f"Quiz JSON parse failed after retry: {e}\nRaw1:\n{raw1}\n\nRaw2:\n{raw2}",
@@ -151,18 +161,52 @@ def generate_mcq_json(question: str, context: str, n: int) -> List[Dict[str, Any
 
 @router.post("/generate", response_model=GenerateQuizResponse)
 def generate_quiz(payload: GenerateQuizRequest):
+    if payload.topic and payload.topic.strip().lower() == "string":
+        raise HTTPException(
+            status_code=400,
+            detail="Please provide a valid topic."
+        )
+
+    if payload.grade is not None:
+        if not validate_topic_exists(payload.grade, payload.topic):
+            raise HTTPException(
+                status_code=404,
+                detail=f"No study material found for Grade {payload.grade}, Topic '{payload.topic}'."
+            )
+        
+    if (
+        payload.conversation_id
+        and payload.conversation_id.strip().lower() == "string"
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Please provide a valid conversation ID."
+        )
+        
     vs = get_vectorstore()
 
     topic = payload.topic or "the study material"
     # retrieve context from RAG: either from topic or from "last topic"
-    context = retrieve_context(vs, topic, k=12)
+    context = retrieve_context(
+            vs,
+            topic,
+            k=12,
+            grade=payload.grade,
+            subject=payload.topic,
+        )
+    
+    if not context:
+        raise HTTPException(
+            status_code=404,
+            detail="No study material found."
+        )
 
     items = generate_mcq_json(topic, context, payload.n_questions)
 
     quiz_id = f"qz_{uuid.uuid4().hex[:10]}"
     store = load_store()
 
-    # store internally with correct_index (not for the front end). topic
+    # store internally with correct_index (not for the front end). topic 
     questions_internal = []
     questions_public = []
 
@@ -299,6 +343,28 @@ def get_quiz(quiz_id: str):
 # createTeacherQuizAssignment API
 @router.post("/template/generate", response_model=QuizTemplateGenerateResponse)
 def generate_quiz_template(payload: QuizTemplateGenerateRequest):
+    if payload.subject and payload.subject.strip().lower() == "string":
+        raise HTTPException(
+            status_code=400,
+            detail="Please provide a valid subject."
+        )
+
+    if payload.topic.strip().lower() == "string":
+        raise HTTPException(
+            status_code=400,
+            detail="Please provide a valid topic."
+        )
+        
+    if payload.grade_level is not None and payload.subject:
+        if not validate_topic_exists(
+            payload.grade_level,
+            payload.subject,
+        ):
+            raise HTTPException(
+                status_code=404,
+                detail="Study material not found."
+            )
+            
     vs = get_vectorstore()
 
     units_text = " ".join(map(str, payload.units)) if payload.units else ""
@@ -308,7 +374,7 @@ def generate_quiz_template(payload: QuizTemplateGenerateRequest):
         vs, topic, k=12, grade=payload.grade_level, subject=payload.subject
     )
 
-    # context = retrieve_context(vs, topic, k=6)
+    # context = retrieve_context(vs, topic, k=6) 
 
     items = generate_mcq_json(topic, context, payload.number_of_questions)
 

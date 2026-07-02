@@ -1,10 +1,19 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pathlib import Path
+from typing import List
+from langchain_core.documents import Document
 
+
+    
 # splitter.py: Splits texts and protects them from duplication with Unique IDs
 # It cuts long texts (from PDFs) into small, organized sections
 
-def split_docs(docs, chunk_size=1000, chunk_overlap=150):
+def split_docs(
+    docs: List[Document],
+    chunk_size: int = 1000,
+    chunk_overlap: int = 150,
+) -> List[Document]:
+    
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
