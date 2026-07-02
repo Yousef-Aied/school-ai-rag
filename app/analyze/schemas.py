@@ -31,7 +31,9 @@ class AnalyzeChatRequest(BaseModel):
 
     # optional context
     grade: Optional[int] = Field(default=None, ge=1, le=12)
-    subject: Optional[str] = "auto"
+    subject: Optional[str] = Field(
+        default="auto"
+    )
     @field_validator(
         "conversation_id",
         "subject",
@@ -43,8 +45,9 @@ class AnalyzeChatRequest(BaseModel):
 
 
 class AnalyzeChatResponse(BaseModel):
-    student_id: int
-    conversation_id: str
+    student_id: int = Field(..., gt=0)
+
+    conversation_id: str = Field(..., min_length=1)
 
     understanding_level: UnderstandingLevel
     learning_style: LearningStyle

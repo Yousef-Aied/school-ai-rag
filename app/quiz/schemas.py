@@ -27,8 +27,7 @@ class GenerateQuizRequest(BaseModel):
     )
     @field_validator(
         "conversation_id",
-        "message",
-        "student_name",
+        "topic",
         mode="before",
     )
     @classmethod
@@ -82,7 +81,7 @@ class QuizTemplateGenerateRequest(BaseModel):
     units: list[str] = Field(default_factory=list)
     @field_validator(
         "topic",
-        "conversation_id",
+        "subject",
         mode="before",
     )
     @classmethod
