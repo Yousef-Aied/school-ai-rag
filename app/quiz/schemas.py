@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
+from pydantic import Field
 
 # This is just the “data forms” going/coming back from the API (so that there is a clear Contract for the team).
 class GenerateQuizRequest(BaseModel):
@@ -66,7 +67,7 @@ class QuizTemplateGenerateRequest(BaseModel):
     grade_level: int = Field(..., ge=1, le=12)
     subject: str = Field(..., min_length=2)
     number_of_questions: int = Field(default=10, ge=1, le=50)
-    units: list[str] = []
+    units: list[str] = Field(default_factory=list)
 
 class QuizTemplateQuestionPublic(BaseModel):
     question_id: str

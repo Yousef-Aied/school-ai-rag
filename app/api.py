@@ -32,6 +32,8 @@ from app.prediction.router import router as prediction_router
 # Study Planner Agent
 from app.agent.router import router as agent_router
 
+from app.common.enums import StudentLevel
+
 import logging
 
 logging.basicConfig(
@@ -205,13 +207,17 @@ class ChatRequest(BaseModel):
 
     message: str = Field(..., min_length=1)
 
-    student_id: Optional[int] = None
+    student_id: Optional[int] = Field(default=None, gt=0)
     student_name: Optional[str] = None
-    grade: Optional[int] = None
+    grade: Optional[int] = Field(default=None, ge=1, le=12)
     subject: Optional[str] = "auto"
 
-    student_level: Optional[str] = "Medium"
-    predicted_score: Optional[float] = 70
+    student_level: StudentLevel = StudentLevel.medium
+    predicted_score: float = Field(
+        default=70,
+        ge=0,
+        le=100
+    )
 
 
 class ChatResponse(BaseModel):
